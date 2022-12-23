@@ -1,6 +1,5 @@
 import datetime
 import random
-import re
 from tally.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 from calendar import month
@@ -51,7 +50,8 @@ def login(request):
                 request.session['t_id'] = member.id 
                 tally=Companies.objects.filter(id= member.id)
                 
-                return render(request,'base.html',{'tally':tally})
+                
+                return render(request,'base.html',{'tally':tally,})
     
         else:
             context = {'msg_error': 'Invalid data'}
@@ -11483,6 +11483,109 @@ def indirect_expenses(request):
     
     
     return render(request,'indirect_expences.html',{'std':std,'stm':stm,'total':total,'total_d':total_d})
+
+
+
+
+
+#--Nithya -----------------payment and reciept vouchers---------------
+
+def list_payment_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        voucher = Voucher.objects.filter(voucher_type = 'Payment')
+        context = {
+                    'voucher': voucher,
+
+                    }
+        return render(request,'list_payment_type.html',context)
+
+
+def payment_vouchers(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+        
+
+        if request.method=="POST":
+            
+            name=request.POST['vtype']
+
+        vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+
+        v  = payment_voucher.objects.values('pid')
+        '''if v['pid'] is None:
+            counter = 1
+        else:
+            v = v.last()
+            counter = v['pid'] + 1'''
+             
+     
+        date1 = date.today().strftime('%d-%b-%y')
+        day1 = date.today().strftime('%A')
+        context = {
+                    'company' : comp ,
+                    'vouch' : vouch,
+                    'date' : date1,
+                    'day' : day1,
+                    'name':name,
+                    #'v' : counter,
+                  }
+        return render(request,'payment_voucher.html',context)
+
+def list_receipt_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        voucher = Voucher.objects.filter(voucher_type = 'Receipt')
+        context = {
+                    'voucher' : voucher,
+                    }
+        return render(request,'list_receipt_type.html',context)
+
+def receipt_vouchers(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+        vouch = Voucher.objects.filter(voucher_type = 'Receipt')
+        vouch_num = payment_voucher.objects.values('id')
+
+        
+            
+        for v in vouch_num:
+            counter = int(v['id'])+1
+        
+       
+        payment_voucher(pid = counter).save()
+        date1 = date.today().strftime('%d-%b-%y')
+        day1 = date.today().strftime('%A')
+        context = {
+                    'company' : comp ,
+                    'vouch' : vouch,
+                    'voucher':counter,
+                    'date' : date1,
+                    'day' : day1,
+
+        }
+        
+        return render(request,'receipt_voucher.html',context)
 
 
 

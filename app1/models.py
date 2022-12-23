@@ -1694,4 +1694,32 @@ class add_voucher3(models.Model):
 
     def _str_(self):
         return self.particular    
+
+
+
+
+#---Nithya----------- payment and receipt vouchers--------
+
+class payment_voucher(models.Model):
+
+    voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+
+    pid = models.IntegerField(null=True)
+    account = models.CharField(max_length= 255, null=True)
+    date = models.DateField(null= True)
+    particulars = models.CharField(max_length=255,null= True)
+    amount = models.IntegerField(null= True)
+    narration = models.CharField(max_length=255)
+
+class receipt_voucher(models.Model):
+
+    voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+
+    rid = models.IntegerField(null=True)
+    account = models.CharField(max_length= 255, null=True)
+    date = models.DateField(null= True)
+    particulars = models.CharField(max_length=255,null= True)
+    amount = models.IntegerField(null= True)
+    narration = models.CharField(max_length=255)
+
         
