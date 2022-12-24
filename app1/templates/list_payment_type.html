@@ -108,7 +108,7 @@
                     <div class="col-sm-2 mt-3 p-0"> <label for="b" class="text-light">Name:</label></div>
                     <div class="col-sm-5 mt-2 p-0"> 
                         <select id="vtype"  name="vtype" class="mb-4 form-control" onchange="showVoucherNo()" required>
-                            <option id = "opt" value="Payment">&nbsp;&nbsp;Payment</option>
+                            <!--<option id = "opt" value="Payment">&nbsp;&nbsp;Payment</option>-->
                             {% for i in voucher %}
                             <option id = "opt" value="{{i.voucher_name}}">&nbsp;&nbsp;{{i.voucher_name}}</option> 
                             {% endfor %}

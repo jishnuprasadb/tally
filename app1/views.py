@@ -1,5 +1,6 @@
 import datetime
 import random
+import re
 from tally.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 from calendar import month
@@ -32,6 +33,7 @@ from django.db.models.functions import TruncDate
 from django.db.models.functions import Extract
 from django.db.models import Count
 from unittest import TextTestRunner
+from django.db.models import Q
 
 # Create your views here.
 
@@ -50,8 +52,7 @@ def login(request):
                 request.session['t_id'] = member.id 
                 tally=Companies.objects.filter(id= member.id)
                 
-                
-                return render(request,'base.html',{'tally':tally,})
+                return render(request,'base.html',{'tally':tally})
     
         else:
             context = {'msg_error': 'Invalid data'}
@@ -11486,8 +11487,6 @@ def indirect_expenses(request):
 
 
 
-
-
 #--Nithya -----------------payment and reciept vouchers---------------
 
 def list_payment_voucher(request):
@@ -11519,8 +11518,10 @@ def payment_vouchers(request):
         if request.method=="POST":
             
             name=request.POST['vtype']
+            
 
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+        ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
 
         v  = payment_voucher.objects.values('pid')
         '''if v['pid'] is None:
@@ -11538,6 +11539,7 @@ def payment_vouchers(request):
                     'date' : date1,
                     'day' : day1,
                     'name':name,
+                    'ledg' : ledg_grp,
                     #'v' : counter,
                   }
         return render(request,'payment_voucher.html',context)
@@ -11586,6 +11588,7 @@ def receipt_vouchers(request):
         }
         
         return render(request,'receipt_voucher.html',context)
+
 
 
 

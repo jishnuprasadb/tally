@@ -1696,8 +1696,6 @@ class add_voucher3(models.Model):
         return self.particular    
 
 
-
-
 #---Nithya----------- payment and receipt vouchers--------
 
 class payment_voucher(models.Model):

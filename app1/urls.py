@@ -770,8 +770,6 @@ urlpatterns = [
     path('indirect_exp',views.indirect_expenses,name='indirect_expenses'),
     path('stock_group2',views.stock_group2,name='stock_group2'),
     path('items_2/<int:pk>',views.items_2,name='items_2'),
-
-    
               
     #--Nithya------payment and receipt vouchers-------
 
@@ -779,6 +777,6 @@ urlpatterns = [
     path('list_receipt_voucher',views.list_receipt_voucher,name='list_receipt_voucher'),
 
     path('payment_vouchers',views.payment_vouchers,name='payment_vouchers'),
-    path('receipt_vouchers',views.receipt_vouchers,name='receipt_vouchers'),                     
+    path('receipt_vouchers',views.receipt_vouchers,name='receipt_vouchers'),                          
 
      ]
