@@ -11521,6 +11521,7 @@ def payment_vouchers(request):
             
 
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+        ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
 
         v  = payment_voucher.objects.values('pid')
@@ -11540,6 +11541,7 @@ def payment_vouchers(request):
                     'day' : day1,
                     'name':name,
                     'ledg' : ledg_grp,
+                    'ledg_all' : ledg_grp_all,
                     #'v' : counter,
                   }
         return render(request,'payment_voucher.html',context)
