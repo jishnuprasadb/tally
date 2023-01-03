@@ -11525,11 +11525,11 @@ def payment_vouchers(request):
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
 
         v  = payment_voucher.objects.values('pid')
-        '''if v['pid'] is None:
+        if v['pid'] is None:
             counter = 1
         else:
             v = v.last()
-            counter = v['pid'] + 1'''
+            counter = v['pid'] + 1
              
      
         date1 = date.today().strftime('%d-%b-%y')
