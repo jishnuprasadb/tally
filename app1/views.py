@@ -11518,18 +11518,19 @@ def payment_vouchers(request):
         if request.method=="POST":
             
             name=request.POST['vtype']
-            
+                       
 
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
 
-        v  = payment_voucher.objects.values('pid')
-        '''if v['pid'] is None:
+        v  = payment_voucher.objects.values('pid').last()
+        '''if v is None:
             counter = 1
-        else:
-            v = v.last()
-            counter = v['pid'] + 1'''
+        else:'''
+        counter = 1 if v is None else int(v['pid']) + 1
+
+        #payment_voucher(pid = counter, voucher = vouch).save()
              
      
         date1 = date.today().strftime('%d-%b-%y')
@@ -11542,7 +11543,7 @@ def payment_vouchers(request):
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
-                    #'v' : counter,
+                    'v' : counter,
                   }
         return render(request,'payment_voucher.html',context)
 

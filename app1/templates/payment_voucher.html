@@ -4,8 +4,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <style>
 
@@ -22,6 +20,16 @@
             -webkit-appearance: none;
             margin: 0;
             }
+            
+        #acc {
+            color: #000;
+            text-align:top;
+            padding: 0px;
+            height: 25px; 
+            width: 20px;
+             background-color: rgb(255, 229, 183);
+            
+        }    
 
         #ledge {
             color: #000;
@@ -38,7 +46,21 @@
                      width: 20px; 
                      background-color: rgb(255, 229, 183);
                 }
-
+        #ledge1 {
+            color: #000;
+            text-align:top;
+            padding: 0px;
+            height: 25px; 
+            width: 150px;
+             background-color: rgb(255, 229, 183);
+            
+        }    
+        #opt1 {
+                    color: black;
+                    height: 5px;
+                    width:150px; 
+                    background-color: rgb(255, 229, 183);
+                }
         .close {
             position: absolute;
             top: 3px;
@@ -128,19 +150,14 @@
                       <div style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                         <span class="input-group">
                         <label>&nbsp;&nbsp;Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <!--<input type="text" style="height: 20px;background-color: rgb(255, 229, 183)"
-                         name="acc1" id="acc1" class="form-control" onclick="accountform();"><br>-->
+                        <input type="text" style="height: 20px;background-color: rgb(255, 229, 183)"
+                         name="acc" id="acc" class="form-control" onclick="accountform();" ><br>
                         
-                        <select id="ledge"  name="ledge" class="mb-4 form-control" >
-                            {% for i in ledg %}
-                            <option id = "opt" onclick="setvalue(' {{i.name}}, {{i.opening_blnc}}, {{i.opening_blnc_type}}')">
-                            &nbsp;&nbsp;{{i.name}}</option> 
-                            {% endfor %}
-                        </select>
+                        
                     </span>
                         <label>&nbsp;&nbsp;Current Balance :</label>
                         <label id="blnc"></label>
-                        <label id="blnc_type" value = "{{i.opening_blnc_type}}"></label>
+                        <label id="blnc_type" ></label>
                         </div>
                       
                        </th>
@@ -161,12 +178,10 @@
 
                         <div>
                             <tr>
-                                <!--<select id="ledge"  name="ledge" class="mb-4 form-control">
-                                    {% for i in ledg_all %}
-                                    <option id = "opt" value="{{i.name}} {{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option> 
-                                    {% endfor %}
-                                </select>-->
-                                <td colspan="12" style="border: none;"><input type="text" style="height: 20px; background-color: rgb(255, 229, 183)"></td>
+                             
+                                <td colspan="12" style="border: none;">
+                                    <input type="text" id = 'acc1' name = 'acc1'
+                                     style="height: 20px; background-color: rgb(255, 229, 183)" onclick="account1form();"></td>
                                 <td colspan="2" class="text-right" style="border: none; ">
                                     <input type="text" style="height: 20px; background-color: rgb(255, 229, 183)"></td>
 
@@ -191,23 +206,45 @@
                 <div class="enter w-100 py-1 mt-0"><button class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
               
               </div>
-              <!--<div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
+
+              <div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
+
                 <form action="" class="form-container1">
                     <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
-                    <button type="button" class="btn cancel close" onclick="closeaccForm();">X</button>
-                    <a href="{% url 'create_ledger' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
+                    <button type="button" class="btn cancel close" onclick="closeaccForm();">x</button>
+                    <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
                     <hr>
                     <div>
                         <table>
                             <tr>
                                             
-                                    {% for i in ledg %}
-                                    <option onclick="setvalue(' {{i.name}} ','{{i.id}}')" class="btns_prnt">&nbsp;&nbsp;{{ i.name }}</option>
+                                    {% for l in ledg %}
+                                    <option onclick="setvalue(' {{l.name}} ','{{l.id}}' ,'{{l.opening_blnc}}', '{{l.opening_blnc_type}}')"  
+                                        class="btns_prnt">&nbsp;&nbsp;{{ l.name }}</option>
                                     {% endfor %}
                                 </tr>
                             </table>
                         </div>
-                        <input type="text" name="acc1hidden" hidden value="{{i.id}}">-->
+                        <input type="text" id = "acchidden" name="acchidden" hidden value="{{l.opening_blnc}}">
+
+                        <div class="form-popup ScrollStyle" id="acc1Form" style="background-color: #213b52" >
+
+                            <form action="" class="form-container1">
+                                <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
+                                <button type="button" class="btn cancel close" onclick="closeacc1Form();">x</button>
+                                <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
+                                <hr>
+                                <div>
+                                    <table>
+                                        <tr>
+                                                        
+                                                {% for la in ledg_all %}
+                                                <option onclick="setvalue1(' {{la.name}} ','{{la.id}}') " class="btns_prnt">&nbsp;&nbsp;{{ la.name }}</option>
+                                                {% endfor %}
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <input type="text" name="acc1hidden" hidden value="{{la.id}} ">
                 </form>    
             </div>
             </form>
@@ -216,18 +253,42 @@
 </div>
 
 
-{% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-
-<script type="text/javascript">
-
-function setvalue(name,blnce,blnce_type){
-            document.getElementById('blnc').value= blnce;
-            document.getElementById('blnc_type').value= blnce_type;
-}
+    <script type="text/javascript">
+    function closeaccForm() {
+            document.getElementById("accForm").style.display = "none";
+        }
+        function accountform(){
+            document.getElementById('accForm').style.display= "block";
+        }
+        function setvalue(name,Id,blnc,blnc_type){
+            document.getElementById('acc').value= name;
+            /*document.getElementById('accForm').style.visibility= "hidden";*/
+            /*document.getElementsByName('acchidden').value= Id;*/
+            document.getElementsById('acchidden').value= blnc;
+            /*document.getElementsByName('acchidden').value= blnc_type;*/
+            
+        }
+        
     
-    /*$("select#ledge").change(function () {
-        const deptId = $(this).children("option: selected").val();
+        function closeacc1Form() {
+            document.getElementById("acc1Form").style.display = "none";
+        }
+        function account1form(){
+            document.getElementById('acc1Form').style.display= "block";
+        }
+        function setvalue1(name1,Id1){
+            document.getElementById('acc1').value= name1;
+            /*document.getElementById('acc1Form').style.visibility= "hidden";*/
+            document.getElementsByName('acc1hidden').value= Id1;
+        }
+
+
+        $("#acc").change(function () {
+        const deptId = $(this).val();
         console.log(deptId);
         $.ajax({
             url: '{% url "payment_vouchers" %}',
@@ -236,42 +297,15 @@ function setvalue(name,blnce,blnce_type){
             },
 
             success: function (data) {
-                $("label#blnc").html(data);
+                $("#blnc").html(data);
                 console.log(data);
             }
         });
 
-    });
-
-
- var element1 = document.getElementById('ledge');
- var element2 = document.getElementById('blnc');
- var element3 = document.getElementById('blnc_type');
-function showblnce(){
- 
-    element2.innerHTML = element1.value;
- if(val=='others')
-   element.style.display='block';
- else  
-   element.style.display='none';
-}
-
-element1.addEventListener('change',showblnce);
-
-
-    function closeaccForm() {
-document.getElementById("accForm").style.display = "none";
-}
-function accountform(){
-document.getElementById('accForm').style.display= "block";
-}
-
-function setvalue(acc1,accId){
-            document.getElementById('acc1').value= accId;
-            document.getElementById('accForm').style.visibility= "hidden";
-            document.getElementsByName('acc1hidden').value= underId;
-        }*/
-
+  });
 
 
 </script>
+
+
+{% endblock %}
