@@ -11517,17 +11517,16 @@ def payment_vouchers(request):
 
         if request.method=="POST":
             
-            name=request.POST['vtype']
+            name=request.POST['ptype']
                        
 
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
 
         v  = payment_voucher.objects.values('pid').last()
-        '''if v is None:
-            counter = 1
-        else:'''
+        
         counter = 1 if v is None else int(v['pid']) + 1
 
         #payment_voucher(pid = counter, voucher = vouch).save()
@@ -11546,6 +11545,36 @@ def payment_vouchers(request):
                     'v' : counter,
                   }
         return render(request,'payment_voucher.html',context)
+
+def create_payment_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+        
+
+        if request.method=="POST":
+            
+            name=request.POST['type']
+                       
+
+        vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
+
+        if request.method=='POST':
+
+            pid = request.POST['idlbl']
+            accnt = request.POST['acc']
+            date1 = request.POST.get('date1')
+            amount=request.POST.get('total')
+            nrt = request.POST['narrate']
+
+            payment_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+
+        return redirect('payment_vouchers')
+        
 
 def list_receipt_voucher(request):
     if 't_id' in request.session:
@@ -11569,28 +11598,69 @@ def receipt_vouchers(request):
             return redirect('/')
 
         comp = Companies.objects.get(id = t_id)
-        vouch = Voucher.objects.filter(voucher_type = 'Receipt')
-        vouch_num = payment_voucher.objects.values('id')
+        
 
-        
+        if request.method=="POST":
             
-        for v in vouch_num:
-            counter = int(v['id'])+1
+            name=request.POST['rtype']
+                       
+
+        vouch = Voucher.objects.filter(voucher_type = 'Receipt').get(voucher_name = name)
+
+        ledg_grp_all = tally_ledger.objects.all()
+        ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
+
+        v  = receipt_voucher.objects.values('rid').last()
         
-       
-        payment_voucher(pid = counter).save()
+        counter = 1 if v is None else int(v['rid']) + 1
+
+        #receipt_voucher(pid = counter, voucher = vouch).save()
+             
+     
         date1 = date.today().strftime('%d-%b-%y')
         day1 = date.today().strftime('%A')
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
-                    'voucher':counter,
                     'date' : date1,
                     'day' : day1,
-
-        }
+                    'name':name,
+                    'ledg' : ledg_grp,
+                    'ledg_all' : ledg_grp_all,
+                    'v' : counter,
+                  }
         
         return render(request,'receipt_voucher.html',context)
+
+def create_receipt_voucher(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+        
+
+        if request.method=="POST":
+            
+            name=request.POST['type']
+                       
+
+        vouch = Voucher.objects.filter(voucher_type = 'Receipt').get(voucher_name = name)
+
+        if request.method=='POST':
+
+            pid = request.POST['idlbl']
+            accnt = request.POST['acc']
+            date1 = request.POST.get('date1')
+            amount=request.POST.get('total')
+            nrt = request.POST['narrate']
+
+            receipt_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+
+        return redirect('receipt_vouchers')
 
 
 

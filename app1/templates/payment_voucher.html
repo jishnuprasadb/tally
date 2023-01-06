@@ -63,13 +63,14 @@
                 }
         .close {
             position: absolute;
-            top: 3px;
+            top: 0px;
             right: 8px;
             font-size: 17px;
             transform: rotate(0deg);
-            color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
             cursor: pointer;
             text-decoration: none;
+            text-align: end;
         }
         .form-popup {
             display: none;
@@ -81,8 +82,23 @@
             width: 300px;
             height: 200px;
         }
+        .form-popup1 {
+            display: none;
+            position: fixed;
+            top: 150px;
+            right: 30px;
+            border: 1px solid #f1f1f1;
+            z-index: 9;
+            width: 300px;
+            height: 200px;
+        }
         .content a:hover {
             background-color: rgb(238, 167, 75);
+        }
+        .form-container {
+            max-width: 350px;
+            height: 300px;
+            padding: 2px; 
         }
         .form-container1 {
             max-width: 350px;
@@ -100,7 +116,7 @@
             background-color:#5bc9e4;
             color: rgb(15, 14, 14);
         }
-        .bt{
+        .btn{
             text-align: end;
         }
         .ScrollStyle{
@@ -109,6 +125,15 @@
         }
         .hide{
             display: none;
+        }
+        .ScrollStyle1{
+            /* max-height: 200px; */
+            overflow-y: scroll;
+        }
+
+        .txt{
+            height: 20px; 
+            background-color: rgb(255, 229, 183)
         }
 
         
@@ -124,23 +149,28 @@
                     <span class="pull-right clickable" data-effect="fadeOut"><i class="fa fa-times" style="color: black;"></i></span></a>
                 </div>                      
             </div>
-            <form action="" id="frmvouch" method="POST" >
+            <form action="create_payment_voucher" id="frmvouch" method="POST" >
                 {% csrf_token %}
             <div class="table-responsive">
                 <table class="table table-bordered table-sm border-dark" style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
                   <tr  class="p-2">
                     <th colspan="8" style="border-bottom: solid 0.5px rgba(205, 196, 196, 0.2) ; border-right:none ;">
                       <div>
-                      <label style="font-weight:600 ;text-transform:capitalize; font-size: 18px;
-                       background-color: rgb(17, 54, 86);">&nbsp;&nbsp;&nbsp;&nbsp;{{name}}&nbsp;&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <label style="font-weight:600 ;text-transform:capitalize; font-size: 18px;background-color: rgb(17, 54, 86);" 
+                      name = 'vouchtype' value = '{{name}}'>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <input type="hidden" value="{{name}}" name="type">
                         <label style="font-weight: 400; color: #000;">No.</label>&nbsp;&nbsp;
 
                         {% if vouch.voucherNumber == 'Automatic' %}
-                        <label style="font-weight: 400; color: #000;">{{v}}</label>
+                        <label style="font-weight: 400; color: #000;" name = 'idlbl'>{{v}}</label>
+                        <input type="hidden" value="{{v}}" name="idlbl">
                         {% elif vouch.voucherNumber == 'Manual'%}
-                        <input type="number" id = 'vouchNum' style="background-color: rgb(255, 229, 183);height: 20px;">
+                        <input type="number" id = 'vouchNum' style="background-color: rgb(255, 229, 183);height: 20px;" name = 'idlbl'>
                         {% elif vouch.voucherNumber == 'None' %}
-                        <label></label>
+                        <input type="hidden" value="" name="idlbl">
+
+                        <label name = 'idlbl'></label>
                         {% elif vouch.voucherNumber == 'Automatic(Manual Override)' %}
                         <input type="number" id = 'vouchNum' style="background-color: rgb(255, 229, 183);height: 20px;">
                         {% endif %}
@@ -163,7 +193,8 @@
                        </th>
                     <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);border-left:none ; color: #000;">                           
                       
-                      <div>{{date}}</div>
+                      <div >{{date}}</div>
+                      <input type="hidden" name = 'date1' value="{{date1}}">
                       <div>{{day}}</div>
                 </th>
 
@@ -180,10 +211,15 @@
                             <tr>
                              
                                 <td colspan="12" style="border: none;">
-                                    <input type="text" id = 'acc1' name = 'acc1'
-                                     style="height: 20px; background-color: rgb(255, 229, 183)" onclick="account1form();"></td>
-                                <td colspan="2" class="text-right" style="border: none; ">
-                                    <input type="text" style="height: 20px; background-color: rgb(255, 229, 183)"></td>
+                                    <input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
+                                        <label style="color: #000;">&nbsp;&nbsp;Cur Bal:</label>
+                                        <label id="blnc"></label>
+                                        <label id="blnc_type" ></label>
+                                    
+                                </td>
+                                <td colspan="2" rowspan="2" class="text-right mt-0" style="border: none; ">
+                                    <input type="text" class = txt id= 'amnt' name = 'amnt' ></td>
+                                    
 
                             </tr>
                         </div>
@@ -193,25 +229,29 @@
                       <td colspan="12" style="border: none;">
                        
                         <label class="text-dark">Narration : </label>
-                            <textarea style="height: 30px; width:250px; background-color: rgb(255, 229, 183)"></textarea></td>
+                            <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183)"></textarea></td>
                         {% else %}
-                        <td></td> 
+                        <td colspan="8" style="border: none;" name  = 'narrate'></td> 
                         {% endif %}    
-                      <td colspan="2" class="text-right" style="border: none;">
-                        <label class="text-dark text-right">total</label>
+                      <td colspan="6" class="text-right" style="border: none;">
+                        <label class="text-dark text-right" >Total : </label>
+                        <label class="txt" id ='total' name = 'total' ></label>
                     </td>
                     </tfoot>
                     
                 </table>
-                <div class="enter w-100 py-1 mt-0"><button class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
-              
+                
               </div>
+
+              <div class="enter w-100 py-1 mt-0">
+                <button class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
+          
 
               <div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
 
-                <form action="" class="form-container1">
+                <form action="" class="form-container">
                     <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
-                    <button type="button" class="btn cancel close" onclick="closeaccForm();">x</button>
+                    <button type="button" class="btn cancel close mt-0 fa fa-times fadeOut" onclick="closeaccForm();"></button>
                     <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
                     <hr>
                     <div>
@@ -225,23 +265,24 @@
                                 </tr>
                             </table>
                         </div>
-                        <input type="text" id = "acchidden" name="acchidden" hidden value="{{l.opening_blnc}}">
+                        <input type="text" id = "acchidden" name="acchidden" hidden value="{{l.id}}">
 
-                        <div class="form-popup ScrollStyle" id="acc1Form" style="background-color: #213b52" >
+                        <div class="form-popup1 ScrollStyle1" id="acc1Form" style="background-color: #213b52" >
 
                             <form action="" class="form-container1">
                                 <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
-                                <button type="button" class="btn cancel close" onclick="closeacc1Form();">x</button>
+                                <button type="button" class="btn cancel close fa fa-times fadeOut" onclick="closeacc1Form();"></button>
                                 <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
                                 <hr>
                                 <div>
                                     <table>
                                         <tr>
                                                         
-                                                {% for la in ledg_all %}
-                                                <option onclick="setvalue1(' {{la.name}} ','{{la.id}}') " class="btns_prnt">&nbsp;&nbsp;{{ la.name }}</option>
-                                                {% endfor %}
-                                            </tr>
+                                            {% for la in ledg_all %}
+                                            <option onclick="setvalue1(' {{la.name}} ','{{la.id}}') " class="btns_prnt">
+                                                 &nbsp;&nbsp;{{ la.name }}</option>
+                                            {% endfor %}
+                                        </tr>
                                         </table>
                                     </div>
                                     <input type="text" name="acc1hidden" hidden value="{{la.id}} ">
@@ -267,8 +308,8 @@
         function setvalue(name,Id,blnc,blnc_type){
             document.getElementById('acc').value= name;
             /*document.getElementById('accForm').style.visibility= "hidden";*/
-            /*document.getElementsByName('acchidden').value= Id;*/
-            document.getElementsById('acchidden').value= blnc;
+            //document.getElementsByName('acchidden').value= Id;
+            //document.getElementsById('acchidden').value= blnc;
             /*document.getElementsByName('acchidden').value= blnc_type;*/
             
         }
@@ -283,7 +324,7 @@
         function setvalue1(name1,Id1){
             document.getElementById('acc1').value= name1;
             /*document.getElementById('acc1Form').style.visibility= "hidden";*/
-            document.getElementsByName('acc1hidden').value= Id1;
+            //document.getElementsByName('acc1hidden').value= Id1;
         }
 
 
@@ -291,19 +332,45 @@
         const deptId = $(this).val();
         console.log(deptId);
         $.ajax({
+                url: '{% url "payment_vouchers" %}',
+                data: {
+                    'dept_id': deptId
+                },
+
+                success: function (data) {
+                    $("#blnc").html(data);
+                    console.log(data);
+                }
+            });
+
+        });
+
+  const txt1 = document.getElementById('amnt');
+  const txt2 = document.getElementById('total');
+  function setTotal(){
+   
+
+    txt2.innerHTML = txt1.value;
+  }
+  txt1.addEventListener('change',setTotal)
+
+
+  $("#amnt").change(function () {
+        const amt = $(this).val();
+        console.log(amt);
+        $.ajax({
             url: '{% url "payment_vouchers" %}',
             data: {
-                'dept_id': deptId
+                'amount': amt
             },
 
             success: function (data) {
-                $("#blnc").html(data);
+                $("#total").html(data);
                 console.log(data);
             }
         });
 
-  });
-
+    });
 
 </script>
 
