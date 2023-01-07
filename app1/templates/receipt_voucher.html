@@ -193,9 +193,9 @@
                        </th>
                     <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);border-left:none ; color: #000;">                           
                       
-                      <div >{{date}}</div>
-                      <input type="hidden" name = 'date1' value="{{date1}}">
-                      <div>{{day}}</div>
+                        <div >{{date1 | date:'d-M-Y'}}</div>
+                        <input type="hidden" name = 'date1' value="{{date1|date:'Y-m-d'}}">
+                        <div>{{date1 | date:'l'}}</div>
                 </th>
 
                   </tr>

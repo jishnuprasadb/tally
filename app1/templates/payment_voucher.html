@@ -27,11 +27,20 @@
             padding: 0px;
             height: 25px; 
             width: 20px;
-             background-color: rgb(255, 229, 183);
+            background-color: rgb(255, 229, 183);
             
         }    
+        #acc1 {
+            color: #000;
+            text-align:top;
+            padding: 0px;
+            height: 25px; 
+            width: 150px;
+            background-color: rgb(255, 229, 183);
+            
+        } 
 
-        #ledge {
+        /*#ledge {
             color: #000;
             text-align:top;
             padding: 0px;
@@ -60,7 +69,7 @@
                     height: 5px;
                     width:150px; 
                     background-color: rgb(255, 229, 183);
-                }
+                }*/
         .close {
             position: absolute;
             top: 0px;
@@ -133,7 +142,11 @@
 
         .txt{
             height: 20px; 
-            background-color: rgb(255, 229, 183)
+            width: 150px;
+            background-color: rgb(255, 229, 183);
+            color: #000;
+            text-align: left;
+            
         }
 
         
@@ -180,22 +193,29 @@
                       <div style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                         <span class="input-group">
                         <label>&nbsp;&nbsp;Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <input type="text" style="height: 20px;background-color: rgb(255, 229, 183)"
-                         name="acc" id="acc" class="form-control" onclick="accountform();" ><br>
+                        <!--<input type="text" name="acc" id="acc" class="txt form-control" onclick="accountform();">
+                         <input type="hidden" id = 'a1cchidden' name='acchidden'><br>-->
+
+                         <select id="acc"  name="acc" class="txt mb-4 form-control" >
+                           
+                            {% for i in ledg %}
+                            <option id = "acc"  value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> 
+                            
+                            {% endfor %}
+                        </select> 
                         
                         
                     </span>
                         <label>&nbsp;&nbsp;Current Balance :</label>
-                        <label id="blnc"></label>
-                        <label id="blnc_type" ></label>
+                        <label id="curbalance" class=" p-0 "></label>
                         </div>
                       
                        </th>
                     <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);border-left:none ; color: #000;">                           
                       
-                      <div >{{date}}</div>
-                      <input type="hidden" name = 'date1' value="{{date1}}">
-                      <div>{{day}}</div>
+                      <div >{{date1 | date:'d-M-Y'}}</div>
+                      <input type="hidden" name = 'date1' value="{{date1|date:'Y-m-d'}}">
+                      <div>{{date1 | date:'l'}}</div>
                 </th>
 
                   </tr>
@@ -210,15 +230,23 @@
                         <div>
                             <tr>
                              
-                                <td colspan="12" style="border: none;">
-                                    <input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
+                                <td colspan="12" style="border: none;" class="mt-4">
+                                    <!--<input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
                                         <label style="color: #000;">&nbsp;&nbsp;Cur Bal:</label>
-                                        <label id="blnc"></label>
-                                        <label id="blnc_type" ></label>
+                                        <label id="blnc"></label>-->
+
+                                        <select id="acc1"  name="acc1" class=" acc1 txt form-control m-2 p-0" >
+                           
+                                        {% for i in ledg_all %}
+                                        <option id = "acc1" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                        {% endfor %}
+                                        </select> 
+                                        <label class = 'blnc' style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label>
+                                        <label class = 'blnc' id="blnc" class="p-0 mt-0" style="color: #000;"></label>
                                     
                                 </td>
                                 <td colspan="2" rowspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="text" class = txt id= 'amnt' name = 'amnt' ></td>
+                                    <input type="text" class = 'txt amnt' id= 'amnt' name = 'amnt'></td>
                                     
 
                             </tr>
@@ -259,13 +287,13 @@
                             <tr>
                                             
                                     {% for l in ledg %}
-                                    <option onclick="setvalue(' {{l.name}} ','{{l.id}}' ,'{{l.opening_blnc}}', '{{l.opening_blnc_type}}')"  
+                                    <option onclick="setvalue('{{l.name}}','{{l.id}}')"  
                                         class="btns_prnt">&nbsp;&nbsp;{{ l.name }}</option>
                                     {% endfor %}
                                 </tr>
                             </table>
                         </div>
-                        <input type="text" id = "acchidden" name="acchidden" hidden value="{{l.id}}">
+                        <input type="text" name="acchidden" hidden value="{{la.id}} ">
 
                         <div class="form-popup1 ScrollStyle1" id="acc1Form" style="background-color: #213b52" >
 
@@ -297,6 +325,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script type="text/javascript">
     function closeaccForm() {
@@ -305,15 +334,12 @@
         function accountform(){
             document.getElementById('accForm').style.display= "block";
         }
-        function setvalue(name,Id,blnc,blnc_type){
+        function setvalue(name,accId){
+
             document.getElementById('acc').value= name;
-            /*document.getElementById('accForm').style.visibility= "hidden";*/
-            //document.getElementsByName('acchidden').value= Id;
-            //document.getElementsById('acchidden').value= blnc;
-            /*document.getElementsByName('acchidden').value= blnc_type;*/
-            
+            document.getElementsById('acchidden').value= accId;
         }
-        
+       
     
         function closeacc1Form() {
             document.getElementById("acc1Form").style.display = "none";
@@ -323,39 +349,55 @@
         }
         function setvalue1(name1,Id1){
             document.getElementById('acc1').value= name1;
-            /*document.getElementById('acc1Form').style.visibility= "hidden";*/
-            //document.getElementsByName('acc1hidden').value= Id1;
         }
 
 
-        $("#acc").change(function () {
-        const deptId = $(this).val();
-        console.log(deptId);
+       /* $("#acchidden").change(function () {
+        const Id = $(this).val();
+        console.log(Id);
         $.ajax({
-                url: '{% url "payment_vouchers" %}',
+                url: '{% url "cur_balance" %}',
+                method : POST,
                 data: {
-                    'dept_id': deptId
+                        'id': Id
                 },
-
+                
                 success: function (data) {
-                    $("#blnc").html(data);
+                    $("#curbalance").html(data);
                     console.log(data);
                 }
             });
-
-        });
+            
+        });*/
+        
 
   const txt1 = document.getElementById('amnt');
   const txt2 = document.getElementById('total');
   function setTotal(){
-   
 
     txt2.innerHTML = txt1.value;
   }
   txt1.addEventListener('change',setTotal)
 
 
-  $("#amnt").change(function () {
+  const txt3 = document.getElementById('acc');
+  const txt4 = document.getElementById('curbalance');
+  function setBlnc(){
+    txt4.innerHTML = txt3.value;
+  }
+  txt3.addEventListener('change',setBlnc)
+
+
+  const txt5 = document.getElementById('acc1');
+  const txt6 = document.getElementById('blnc');
+  function setBlnc1(){
+
+    txt6.innerHTML = txt5.value;
+    
+  }
+  txt5.addEventListener('change',setBlnc1)
+
+  /*$("#amnt").change(function () {
         const amt = $(this).val();
         console.log(amt);
         $.ajax({
@@ -370,6 +412,20 @@
             }
         });
 
+    });*/
+
+    $(function() {
+        $('.amnt').on('change', function( e ) {
+            e.preventDefault();
+            $('<div/>').addClass( 'new-row' )
+            
+            .html($('<tr> <td><select /> </td> </tr>')).addClass('acc1')
+            .add($('<label style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label> ')).addClass('blnc')
+            .add($('<label />')).addClass('blnc')
+            .add( $('<input type="textbox"/>').addClass( 'txt amnt' ))
+            .insertAfter( this );
+        });
+       
     });
 
 </script>

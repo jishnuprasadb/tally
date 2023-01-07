@@ -11514,12 +11514,8 @@ def payment_vouchers(request):
 
         comp = Companies.objects.get(id = t_id)
         
-
-        if request.method=="POST":
-            
-            name=request.POST['ptype']
-                       
-
+        name=request.POST.get('ptype')
+     
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
 
         ledg_grp_all = tally_ledger.objects.all()
@@ -11530,15 +11526,14 @@ def payment_vouchers(request):
         counter = 1 if v is None else int(v['pid']) + 1
 
         #payment_voucher(pid = counter, voucher = vouch).save()
+
+        ltype = ledg_grp_all
              
      
-        date1 = date.today().strftime('%d-%b-%y')
-        day1 = date.today().strftime('%A')
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
-                    'date' : date1,
-                    'day' : day1,
+                    'date1' : date.today(),
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
@@ -11571,7 +11566,7 @@ def create_payment_voucher(request):
             amount=request.POST.get('total')
             nrt = request.POST['narrate']
 
-            payment_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            #payment_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
         return redirect('payment_vouchers')
         
@@ -11617,13 +11612,12 @@ def receipt_vouchers(request):
         #receipt_voucher(pid = counter, voucher = vouch).save()
              
      
-        date1 = date.today().strftime('%d-%b-%y')
-        day1 = date.today().strftime('%A')
+        '''date1 = date.today().strftime('%d-%b-%y')
+        day1 = date.today().strftime('%A')'''
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
-                    'date' : date1,
-                    'day' : day1,
+                    'date1' : date.today(),
                     'name':name,
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
@@ -11652,15 +11646,22 @@ def create_receipt_voucher(request):
 
         if request.method=='POST':
 
-            pid = request.POST['idlbl']
+            rid = request.POST['idlbl']
             accnt = request.POST['acc']
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
             nrt = request.POST['narrate']
-
-            receipt_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            
+            receipt_voucher(rid = rid,account = accnt, date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
         return redirect('receipt_vouchers')
+
+
+def cur_balance(request):
+    if request.method == 'POST':
+        i = id
+    ledg = tally_ledger.objects.filter(id = i)
+    return render(request,'curbalance.html', {'ledg' : ledg })
 
 
 
