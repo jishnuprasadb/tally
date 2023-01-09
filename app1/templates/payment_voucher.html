@@ -422,11 +422,36 @@
             .html($('<tr> <td><select /> </td> </tr>')).addClass('acc1')
             .add($('<label style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label> ')).addClass('blnc')
             .add($('<label />')).addClass('blnc')
-            .add( $('<input type="textbox"/>').addClass( 'txt amnt' ))
+            .add( $('<input type="textbox"/>').addClass( 'amnt' ))
             .insertAfter( this );
         });
+
+
        
     });
+
+    const tot = document.getElementsByClassName('amnt');
+
+    function updateAmount() {
+        document.getElementById('total').value = []
+            .slice.call(
+            document.getElementsByClassName('amnt') 
+            )
+            .map(function(costField) {
+            return parseInt(costField.value, 10);         
+            })
+            .filter(function(value) {
+            return !Number.isNaN(value);                  
+            })
+            .reduce(function(sum, value) {
+            return sum + value;                           
+            }, 0);
+}
+
+
+tot.addEventListener('change',updateAmount);
+
+
 
 </script>
 
