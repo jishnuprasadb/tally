@@ -220,14 +220,14 @@
 
                   </tr>
                    
-                    <tbody style="border-color: rgb(112, 111, 111);">
+                    <tbody style="border-color: rgb(112, 111, 111); " class = 'part'>
                         <div>
                         <tr>
                             <th colspan="12" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Particulars</th>
                             <th colspan="2" class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">Amount&nbsp;</th>
                         </tr></div>
 
-                        <div>
+                        <!--<div class = 'part'>-->
                             <tr>
                              
                                 <td colspan="12" style="border: none;" class="mt-4">
@@ -250,7 +250,7 @@
                                     
 
                             </tr>
-                        </div>
+
                     </tbody>
                     <tfoot >
                         {% if vouch.voucherNarration == 'Yes' %}
@@ -414,23 +414,56 @@
 
     });*/
 
-    $(function() {
+    /*$(function() {
         $('.amnt').on('change', function( e ) {
             e.preventDefault();
             $('<div/>').addClass( 'new-row' )
             
             .html($('<tr> <td><select /> </td> </tr>')).addClass('acc1')
-            .add($('<label style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label> ')).addClass('blnc')
-            .add($('<label />')).addClass('blnc')
+           // .add($('<label style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label> ')).addClass('blnc')
+            //.add($('<label />')).addClass('blnc')
             .add( $('<input type="textbox"/>').addClass( 'amnt' ))
             .insertAfter( this );
         });
 
 
        
-    });
+    });*/
 
-    const tot = document.getElementsByClassName('amnt');
+
+$(document).ready(function() {
+    var max_fields = 20;
+$(".amnt").on ('change', function() {
+    var x=1;
+    if(x<max_fields){
+        x++;
+$(".part").append(
+'<tr><td colspan="12" style="border: none;" class="mt-4"><select id="acc1"+ x name="acc1" class=" acc1 txt form-control m-2 p-0" >{% for i in ledg_all %}<option id = "acc1" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc" style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label><label class = "blnc" id="blnc" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2"  class="text-right mt-0" style="border: none; "><input type="text" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
+}    
+});
+    // $('.part').on('input', '.', function() {
+    //     var index = $(this).closest('table').find('input').index(this);
+
+    //     $('#tableboth').find('.').eq(index).val($(this).val())
+    //});
+    print(x)
+ });
+
+ var max_fields1 =20;
+ var x =1;
+ if(x<max_fields1){
+    x++;
+  const txt7 = document.getElementById('acc1'+x);
+  const txt8 = document.getElementById('blnc');
+  function setBlnc1(){
+
+    txt6.innerHTML = txt5.value;
+    
+  }
+  txt5.addEventListener('change',setBlnc1)
+}
+
+    /*const tot = document.getElementsByClassName('amnt');
 
     function updateAmount() {
         document.getElementById('total').value = []
@@ -447,9 +480,7 @@
             return sum + value;                           
             }, 0);
 }
-
-
-tot.addEventListener('change',updateAmount);
+tot.addEventListener('change',updateAmount);*/
 
 
 
