@@ -30,12 +30,19 @@
             background-color: rgb(255, 229, 183);
             
         }    
-        #acc1 {
+        select .rows {
             color: #000;
             text-align:top;
             padding: 0px;
             height: 25px; 
-            width: 150px;
+            width: 20px;
+            background-color: rgb(255, 229, 183);
+            
+        } 
+        #opt {
+            color: #000;
+            text-align:top;
+            padding: 0px;
             background-color: rgb(255, 229, 183);
             
         } 
@@ -190,16 +197,17 @@
 
                       </div>
 
-                      <div style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
+                      <div class= "account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                         <span class="input-group">
                         <label>&nbsp;&nbsp;Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <!--<input type="text" name="acc" id="acc" class="txt form-control" onclick="accountform();">
                          <input type="hidden" id = 'a1cchidden' name='acchidden'><br>-->
 
                          <select id="acc"  name="acc" class="txt mb-4 form-control" >
-                           
+                            <option id = "opt" >&nbsp;&nbsp;Select Account</option> 
+
                             {% for i in ledg %}
-                            <option id = "acc"  value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> 
+                            <option id = "opt"  value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> 
                             
                             {% endfor %}
                         </select> 
@@ -228,25 +236,26 @@
                         </tr></div>
 
                         <!--<div class = 'part'>-->
-                            <tr>
+                            <tr style="border: none;">
                              
                                 <td colspan="12" style="border: none;" class="mt-4">
                                     <!--<input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
                                         <label style="color: #000;">&nbsp;&nbsp;Cur Bal:</label>
                                         <label id="blnc"></label>-->
 
-                                        <select id="acc1"  name="acc1" class=" acc1 txt form-control m-2 p-0" >
-                           
+                                        <select id="acc1"  name="acc1" class=" rows acc1 txt form-control m-2 p-0" >
+                                        <option id = "opt" >&nbsp;&nbsp;Select Particulars</option> 
+
                                         {% for i in ledg_all %}
-                                        <option id = "acc1" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                        <option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option> 
                                         {% endfor %}
                                         </select> 
-                                        <label class = 'blnc' style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label>
-                                        <label class = 'blnc' id="blnc" class="p-0 mt-0" style="color: #000;"></label>
+                                        <label class = 'blnc1' style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label>
+                                        <label class = 'blnc1' id="blnc1" class="p-0 mt-0" style="color: #000;"></label>
                                     
                                 </td>
-                                <td colspan="2" rowspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="text" class = 'txt amnt' id= 'amnt' name = 'amnt'></td>
+                                <td colspan="2" class="text-right mt-0" style="border: none; ">
+                                    <input type="number" class = 'txt amnt' id= 'amnt' name = 'amnt'></td>
                                     
 
                             </tr>
@@ -275,7 +284,7 @@
                 <button class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
           
 
-              <div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
+              <!--<div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
 
                 <form action="" class="form-container">
                     <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
@@ -315,7 +324,7 @@
                                     </div>
                                     <input type="text" name="acc1hidden" hidden value="{{la.id}} ">
                 </form>    
-            </div>
+            </div>-->
             </form>
         </div>
     </div>
@@ -328,7 +337,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script type="text/javascript">
-    function closeaccForm() {
+
+    /*function closeaccForm() {
             document.getElementById("accForm").style.display = "none";
         }
         function accountform(){
@@ -349,141 +359,92 @@
         }
         function setvalue1(name1,Id1){
             document.getElementById('acc1').value= name1;
+        }*/
+
+
+/* $("#acchidden").change(function () {
+const Id = $(this).val();
+console.log(Id);
+$.ajax({
+        url: '{% url "cur_balance" %}',
+        method : POST,
+        data: {
+                'id': Id
+        },
+        
+        success: function (data) {
+            $("#curbalance").html(data);
+            console.log(data);
         }
-
-
-       /* $("#acchidden").change(function () {
-        const Id = $(this).val();
-        console.log(Id);
-        $.ajax({
-                url: '{% url "cur_balance" %}',
-                method : POST,
-                data: {
-                        'id': Id
-                },
-                
-                success: function (data) {
-                    $("#curbalance").html(data);
-                    console.log(data);
-                }
-            });
-            
-        });*/
+    });
+    
+});*/
         
 
-  const txt1 = document.getElementById('amnt');
-  const txt2 = document.getElementById('total');
-  function setTotal(){
+            const txt1 = document.getElementById('amnt');
+            const txt2 = document.getElementById('total');
+            function setTotal(){
 
-    txt2.innerHTML = txt1.value;
-  }
-  txt1.addEventListener('change',setTotal)
+                txt2.innerHTML = txt1.value;
+            }
+            txt1.addEventListener('change',setTotal)
 
 
   const txt3 = document.getElementById('acc');
   const txt4 = document.getElementById('curbalance');
   function setBlnc(){
-    txt4.innerHTML = txt3.value;
+
+        txt4.innerHTML = txt3.value;
   }
   txt3.addEventListener('change',setBlnc)
 
 
-  const txt5 = document.getElementById('acc1');
-  const txt6 = document.getElementById('blnc');
-  function setBlnc1(){
+            const txt5 = document.getElementById('acc1');
+            const txt6 = document.getElementById('blnc1');
+            function setBlnc1(){
 
-    txt6.innerHTML = txt5.value;
-    
-  }
-  txt5.addEventListener('change',setBlnc1)
-
-  /*$("#amnt").change(function () {
-        const amt = $(this).val();
-        console.log(amt);
-        $.ajax({
-            url: '{% url "payment_vouchers" %}',
-            data: {
-                'amount': amt
-            },
-
-            success: function (data) {
-                $("#total").html(data);
-                console.log(data);
+                txt6.innerHTML = txt5.value;
+                
             }
-        });
-
-    });*/
-
-    /*$(function() {
-        $('.amnt').on('change', function( e ) {
-            e.preventDefault();
-            $('<div/>').addClass( 'new-row' )
-            
-            .html($('<tr> <td><select /> </td> </tr>')).addClass('acc1')
-           // .add($('<label style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label> ')).addClass('blnc')
-            //.add($('<label />')).addClass('blnc')
-            .add( $('<input type="textbox"/>').addClass( 'amnt' ))
-            .insertAfter( this );
-        });
-
-
-       
-    });*/
-
+            txt5.addEventListener('change',setBlnc1)
 
 $(document).ready(function() {
-    var max_fields = 20;
-$(".amnt").on ('change', function() {
-    var x=1;
-    if(x<max_fields){
-        x++;
-$(".part").append(
-'<tr><td colspan="12" style="border: none;" class="mt-4"><select id="acc1"+ x name="acc1" class=" acc1 txt form-control m-2 p-0" >{% for i in ledg_all %}<option id = "acc1" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc" style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label><label class = "blnc" id="blnc" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2"  class="text-right mt-0" style="border: none; "><input type="text" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
-}    
-});
-    // $('.part').on('input', '.', function() {
-    //     var index = $(this).closest('table').find('input').index(this);
+    var max_fields = 10; //maximum input boxes allowed
+    var x = 1;
+              
+    $(".amnt").on ('change', function() {
+        if (x < max_fields) { 
+            x++; 
+            $(".part").append(
 
-    //     $('#tableboth').find('.').eq(index).val($(this).val())
-    //});
-    print(x)
+                '<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="acc'+x+'" name="acc1" class=" rows acc1 txt form-control m-2 p-0" >{% for i in ledg_all %}<option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
+
+            const txt7 = document.getElementById('acc'+x);
+            const txt8 = document.getElementById('blnc'+x);
+            function setBlnc1(){
+
+                txt8.innerHTML = txt7.value;
+                
+            }
+            txt7.addEventListener('change',setBlnc1)
+        } 
+        
+        
+    });
+          
+    $('.amnt').on('input','div .account', function() {
+    var index = $(this).closest('div .account').find('input').index(this);
+    var that = $(this);
+  
+    //for second table
+    $('#curbalance').each(function(index,obj){
+    
+    $(obj).find('div .account').val(index.val()-that.val())});
+
+    });
  });
 
- var max_fields1 =20;
- var x =1;
- if(x<max_fields1){
-    x++;
-  const txt7 = document.getElementById('acc1'+x);
-  const txt8 = document.getElementById('blnc');
-  function setBlnc1(){
-
-    txt6.innerHTML = txt5.value;
-    
-  }
-  txt5.addEventListener('change',setBlnc1)
-}
-
-    /*const tot = document.getElementsByClassName('amnt');
-
-    function updateAmount() {
-        document.getElementById('total').value = []
-            .slice.call(
-            document.getElementsByClassName('amnt') 
-            )
-            .map(function(costField) {
-            return parseInt(costField.value, 10);         
-            })
-            .filter(function(value) {
-            return !Number.isNaN(value);                  
-            })
-            .reduce(function(sum, value) {
-            return sum + value;                           
-            }, 0);
-}
-tot.addEventListener('change',updateAmount);*/
-
-
-
+ 
 </script>
 
 

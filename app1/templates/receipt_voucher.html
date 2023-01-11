@@ -133,9 +133,12 @@
 
         .txt{
             height: 20px; 
-            background-color: rgb(255, 229, 183)
+            width: 150px;
+            background-color: rgb(255, 229, 183);
+            color: #000;
+            text-align: left;
+            
         }
-
         
 </style>
 <div class="container-fluid" >
@@ -200,29 +203,29 @@
 
                   </tr>
                    
-                    <tbody style="border-color: rgb(112, 111, 111);">
+                    <tbody style="border-color: rgb(112, 111, 111);" class = 'part'>
                         <div>
                         <tr>
                             <th colspan="12" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Particulars</th>
                             <th colspan="2" class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">Amount&nbsp;</th>
                         </tr></div>
 
-                        <div>
-                            <tr>
+                        
+                            <tr style="border: none;">
                              
                                 <td colspan="12" style="border: none;">
-                                    <input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
+                                    <input type="text" id = 'acc1' name = 'acc1' class="txt acc1" onclick="account1form();"><br>
                                         <label style="color: #000;">&nbsp;&nbsp;Current Balance :</label>
                                         <label id="blnc"></label>
                                         <label id="blnc_type" ></label>
                                     
                                 </td>
-                                <td colspan="2" rowspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="text" class = txt id= 'amnt' name = 'amnt' ></td>
+                                <td colspan="2"  class="text-right mt-0" style="border: none; ">
+                                    <input type="text" class = 'txt amnt' id= 'amnt' name = 'amnt'></td>
                                     
 
                             </tr>
-                        </div>
+                        
                     </tbody>
                     <tfoot >
                         {% if vouch.voucherNarration == 'Yes' %}
@@ -294,75 +297,102 @@
 </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <script type="text/javascript">
-    function closeaccForm() {
-            document.getElementById("accForm").style.display = "none";
+<script type="text/javascript">
+
+function closeaccForm() {
+        document.getElementById("accForm").style.display = "none";
+    }
+    function accountform(){
+        document.getElementById('accForm').style.display= "block";
+    }
+    function setvalue(name,accId){
+
+        document.getElementById('acc').value= name;
+        document.getElementsById('acchidden').value= accId;
+    }
+   
+
+    function closeacc1Form() {
+        document.getElementById("acc1Form").style.display = "none";
+    }
+    function account1form(){
+        document.getElementById('acc1Form').style.display= "block";
+    }
+    function setvalue1(name1,Id1){
+        document.getElementById('acc1').value= name1;
+    }
+
+
+ $("#acchidden").change(function () {
+const Id = $(this).val();
+console.log(Id);
+$.ajax({
+    url: '{% url "cur_balance" %}',
+    method : POST,
+    data: {
+            'id': Id
+    },
+    
+    success: function (data) {
+        $("#curbalance").html(data);
+        console.log(data);
+    }
+});
+
+});
+    
+
+        const txt1 = document.getElementById('amnt');
+        const txt2 = document.getElementById('total');
+        function setTotal(){
+
+            txt2.innerHTML = txt1.value;
         }
-        function accountform(){
-            document.getElementById('accForm').style.display= "block";
-        }
-        function setvalue(name,Id,blnc,blnc_type){
-            document.getElementById('acc').value= name;
-            /*document.getElementById('accForm').style.visibility= "hidden";*/
-            //document.getElementsByName('acchidden').value= Id;
-            //document.getElementsById('acchidden').value= blnc;
-            /*document.getElementsByName('acchidden').value= blnc_type;*/
+        txt1.addEventListener('change',setTotal)
+
+
+const txt3 = document.getElementById('acc');
+const txt4 = document.getElementById('curbalance');
+function setBlnc(){
+
+    txt4.innerHTML = txt3.value;
+}
+txt3.addEventListener('change',setBlnc)
+
+
+        const txt5 = document.getElementById('acc1');
+        const txt6 = document.getElementById('blnc');
+        function setBlnc1(){
+
+            txt6.innerHTML = txt5.value;
             
         }
+        txt5.addEventListener('change',setBlnc1)
+
+
+$(document).ready(function() {
+
+$(".amnt").on ('change', function() {
+
+    $(".part").append(
+
+        '<tr style="border: none;"><td colspan="12" style="border: none;"><input type="text" id = "acc1" name = "acc1" class="txt acc1" onclick="account1form();"><br><label style="color: #000;">&nbsp;&nbsp;Current Balance :</label><label id="blnc"></label><label id="blnc_type" ></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="text" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
         
-    
-        function closeacc1Form() {
-            document.getElementById("acc1Form").style.display = "none";
-        }
-        function account1form(){
-            document.getElementById('acc1Form').style.display= "block";
-        }
-        function setvalue1(name1,Id1){
-            document.getElementById('acc1').value= name1;
-            /*document.getElementById('acc1Form').style.visibility= "hidden";*/
-            //document.getElementsByName('acc1hidden').value= Id1;
-        }
+});
+        
+// $('.part').on('input', '.', function() {
+//     var index = $(this).closest('table').find('input').index(this);
 
+//     $('#tableboth').find('.').eq(index).val($(this).val())
+//});
 
-        $("#acc").change(function () {
-        const deptId = $(this).val();
-        console.log(deptId);
-        $.ajax({
-                url: '{% url "receipt_vouchers" %}',
-                data: {
-                    'dept_id': deptId
-                },
+});
 
-                success: function (data) {
-                    $("#blnc").html(data);
-                    console.log(data);
-                }
-            });
-
-        });
-
- 
-
-  $("#amnt").change(function () {
-        const amt = $(this).val();
-        console.log(amt);
-        $.ajax({
-            url: '{% url "receipt_vouchers" %}',
-            data: {
-                'amount': amt
-            },
-
-            success: function (data) {
-                $("#total").html(data);
-                console.log(data);
-            }
-        });
-
-    });
 
 </script>
 
