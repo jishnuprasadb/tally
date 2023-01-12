@@ -1,8 +1,16 @@
-{% extends 'base.html' %}
-{% block body %}
+<style>
+.txt{
+    height: 20px; 
+    width: 50px;
+    background-color: rgb(255, 229, 183);
+    color: #000;
+    text-align: left;
+    left: 10px;
+}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 
-<input type="text" value="{{ ledg.opening_blnc }}">
+<input type="text" value="{{ledg.opening_blnc}}" readonly class="txt">
+<input type="text" value="{{ledg.opening_blnc_type}}" readonly class="txt">
 
-{% endblock %}

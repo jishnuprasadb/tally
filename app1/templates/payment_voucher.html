@@ -21,24 +21,8 @@
             margin: 0;
             }
             
-        #acc {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            height: 25px; 
-            width: 20px;
-            background-color: rgb(255, 229, 183);
-            
-        }    
-        select .rows {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            height: 25px; 
-            width: 20px;
-            background-color: rgb(255, 229, 183);
-            
-        } 
+           
+        
         #opt {
             color: #000;
             text-align:top;
@@ -47,36 +31,6 @@
             
         } 
 
-        /*#ledge {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            height: 25px; 
-            width: 20px;
-             background-color: rgb(255, 229, 183);
-            
-        }    
-        #opt{
-                    color: black;
-                    height: 25px;
-                     width: 20px; 
-                     background-color: rgb(255, 229, 183);
-                }
-        #ledge1 {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            height: 25px; 
-            width: 150px;
-             background-color: rgb(255, 229, 183);
-            
-        }    
-        #opt1 {
-                    color: black;
-                    height: 5px;
-                    width:150px; 
-                    background-color: rgb(255, 229, 183);
-                }*/
         .close {
             position: absolute;
             top: 0px;
@@ -136,20 +90,28 @@
             text-align: end;
         }
         .ScrollStyle{
-            /* max-height: 200px; */
             overflow-y: scroll;
         }
         .hide{
             display: none;
         }
         .ScrollStyle1{
-            /* max-height: 200px; */
             overflow-y: scroll;
         }
+        .acc {
+            color: #000;
+            text-align:top;
+            padding: 0px;
+            height: 25px; 
+            width: 150px;
+            background-color: rgb(255, 229, 183);
+            
+        } 
 
         .txt{
             height: 20px; 
             width: 150px;
+            padding: 0;
             background-color: rgb(255, 229, 183);
             color: #000;
             text-align: left;
@@ -189,7 +151,6 @@
                         <input type="number" id = 'vouchNum' style="background-color: rgb(255, 229, 183);height: 20px;" name = 'idlbl'>
                         {% elif vouch.voucherNumber == 'None' %}
                         <input type="hidden" value="" name="idlbl">
-
                         <label name = 'idlbl'></label>
                         {% elif vouch.voucherNumber == 'Automatic(Manual Override)' %}
                         <input type="number" id = 'vouchNum' style="background-color: rgb(255, 229, 183);height: 20px;">
@@ -200,22 +161,23 @@
                       <div class= "account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
                         <span class="input-group">
                         <label>&nbsp;&nbsp;Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <!--<input type="text" name="acc" id="acc" class="txt form-control" onclick="accountform();">
-                         <input type="hidden" id = 'a1cchidden' name='acchidden'><br>-->
 
-                         <select id="acc"  name="acc" class="txt mb-4 form-control" >
-                            <option id = "opt" >&nbsp;&nbsp;Select Account</option> 
+                         <select id="payacc"  name="acc"  class=" acc mb-4 form-control" style="width: 0;">
 
                             {% for i in ledg %}
-                            <option id = "opt"  value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> 
+                            <option id = "opt" name ='opt' value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
+                            <!--<option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> -->
+
                             
                             {% endfor %}
                         </select> 
                         
                         
                     </span>
-                        <label>&nbsp;&nbsp;Current Balance :</label>
-                        <label id="curbalance" class=" p-0 "></label>
+                    <span class="input-group">
+                    <label>&nbsp;&nbsp;Current Balance :&nbsp;&nbsp;</label>
+                       <label id ='curbalance'></label>
+                    </span>
                         </div>
                       
                        </th>
@@ -239,15 +201,11 @@
                             <tr style="border: none;">
                              
                                 <td colspan="12" style="border: none;" class="mt-4">
-                                    <!--<input type="text" id = 'acc1' name = 'acc1' class="txt" onclick="account1form();"><br>
-                                        <label style="color: #000;">&nbsp;&nbsp;Cur Bal:</label>
-                                        <label id="blnc"></label>-->
 
-                                        <select id="acc1"  name="acc1" class=" rows acc1 txt form-control m-2 p-0" >
-                                        <option id = "opt" >&nbsp;&nbsp;Select Particulars</option> 
+                                        <select id="payacc1"  name="acc1" class=" rows acc form-control m-2 p-0"  >
 
                                         {% for i in ledg_all %}
-                                        <option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                        <option id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
                                         {% endfor %}
                                         </select> 
                                         <label class = 'blnc1' style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label>
@@ -263,68 +221,29 @@
                     </tbody>
                     <tfoot >
                         {% if vouch.voucherNarration == 'Yes' %}
-                      <td colspan="12" style="border: none;">
+                      <td colspan="12" style="border: none; ">
                        
                         <label class="text-dark">Narration : </label>
                             <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183)"></textarea></td>
                         {% else %}
-                        <td colspan="8" style="border: none;" name  = 'narrate'></td> 
+                        <td colspan="12" style="border: none;" name  = 'narrate'></td> 
                         {% endif %}    
-                      <td colspan="6" class="text-right" style="border: none;">
+                      <td colspan="2" class="text-right" style="border: none; " >
                         <label class="text-dark text-right" >Total : </label>
-                        <label class="txt" id ='total' name = 'total' ></label>
+                        <input type="text" class="txt mt-2" id ='total' name = 'total' readonly>
                     </td>
                     </tfoot>
                     
                 </table>
                 
               </div>
-
+             
               <div class="enter w-100 py-1 mt-0">
-                <button class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
-          
+                <button type = 'submit' class="btn  w-30" style="color:aliceblue;background-color: rgb(7, 62, 94);" >SAVE</button></div>    
 
-              <!--<div class="form-popup ScrollStyle" id="accForm" style="background-color: #213b52" >
 
-                <form action="" class="form-container">
-                    <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
-                    <button type="button" class="btn cancel close mt-0 fa fa-times fadeOut" onclick="closeaccForm();"></button>
-                    <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
-                    <hr>
-                    <div>
-                        <table>
-                            <tr>
-                                            
-                                    {% for l in ledg %}
-                                    <option onclick="setvalue('{{l.name}}','{{l.id}}')"  
-                                        class="btns_prnt">&nbsp;&nbsp;{{ l.name }}</option>
-                                    {% endfor %}
-                                </tr>
-                            </table>
-                        </div>
-                        <input type="text" name="acchidden" hidden value="{{la.id}} ">
+              
 
-                        <div class="form-popup1 ScrollStyle1" id="acc1Form" style="background-color: #213b52" >
-
-                            <form action="" class="form-container1">
-                                <h6 style="background-color:rgb(17, 169, 240) ;color:white text">List of Ledger Accounts</h6>
-                                <button type="button" class="btn cancel close fa fa-times fadeOut" onclick="closeacc1Form();"></button>
-                                <a href="{% url 'ledgers' %}" style="cursor:pointer" class="btn bt btns_prnt" role="button">Create</a>  
-                                <hr>
-                                <div>
-                                    <table>
-                                        <tr>
-                                                        
-                                            {% for la in ledg_all %}
-                                            <option onclick="setvalue1(' {{la.name}} ','{{la.id}}') " class="btns_prnt">
-                                                 &nbsp;&nbsp;{{ la.name }}</option>
-                                            {% endfor %}
-                                        </tr>
-                                        </table>
-                                    </div>
-                                    <input type="text" name="acc1hidden" hidden value="{{la.id}} ">
-                </form>    
-            </div>-->
             </form>
         </div>
     </div>
@@ -336,49 +255,51 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <script type="text/javascript">
-
-    /*function closeaccForm() {
-            document.getElementById("accForm").style.display = "none";
-        }
-        function accountform(){
-            document.getElementById('accForm').style.display= "block";
-        }
-        function setvalue(name,accId){
-
-            document.getElementById('acc').value= name;
-            document.getElementsById('acchidden').value= accId;
-        }
-       
     
-        function closeacc1Form() {
-            document.getElementById("acc1Form").style.display = "none";
-        }
-        function account1form(){
-            document.getElementById('acc1Form').style.display= "block";
-        }
-        function setvalue1(name1,Id1){
-            document.getElementById('acc1').value= name1;
-        }*/
-
-
-/* $("#acchidden").change(function () {
-const Id = $(this).val();
-console.log(Id);
-$.ajax({
+<script>
+     $("#payacc").change(function () {
+    const accid = $(this).val();
+    console.log(accid);
+    $.ajax({
         url: '{% url "cur_balance" %}',
-        method : POST,
         data: {
-                'id': Id
+                'id': accid
         },
         
         success: function (data) {
             $("#curbalance").html(data);
             console.log(data);
         }
+        
     });
     
-});*/
+});
+
+
+$("#payacc1").change(function () {
+    const accid = $(this).val();
+    console.log(accid);
+    $.ajax({
+        url: '{% url "cur_balance" %}',
+        data: {
+                'id': accid
+        },
+        
+        success: function (data) {
+            $("#blnc1").html(data);
+            console.log(data);
+        }
+        
+    });
+    
+});
+</script>
+
+<script type="text/javascript">
+function setvalue(name){
+    
+    document.getElementById('acc').value= name;
+}
         
 
             const txt1 = document.getElementById('amnt');
@@ -390,13 +311,24 @@ $.ajax({
             txt1.addEventListener('change',setTotal)
 
 
-  const txt3 = document.getElementById('acc');
+  /*const txt3 = document.getElementById('acc').value;
   const txt4 = document.getElementById('curbalance');
-  function setBlnc(){
-
-        txt4.innerHTML = txt3.value;
-  }
-  txt3.addEventListener('change',setBlnc)
+  console.log(txt3);
+  $("#accc").change(function () {
+  $.ajax({
+        url: '{% url "cur_balance" %}',
+        
+        data: {
+                'id': txt3
+        },
+        
+        success: function (data) {
+            $("#curbalance").html(data);
+        }
+    });
+});
+    
+  
 
 
             const txt5 = document.getElementById('acc1');
@@ -406,10 +338,14 @@ $.ajax({
                 txt6.innerHTML = txt5.value;
                 
             }
-            txt5.addEventListener('change',setBlnc1)
+            txt5.addEventListener('change',setBlnc1)*/
+
+
+
+
 
 $(document).ready(function() {
-    var max_fields = 10; //maximum input boxes allowed
+    var max_fields = 10; 
     var x = 1;
               
     $(".amnt").on ('change', function() {
@@ -431,21 +367,12 @@ $(document).ready(function() {
         
         
     });
-          
-    $('.amnt').on('input','div .account', function() {
-    var index = $(this).closest('div .account').find('input').index(this);
-    var that = $(this);
-  
-    //for second table
-    $('#curbalance').each(function(index,obj){
-    
-    $(obj).find('div .account').val(index.val()-that.val())});
-
-    });
- });
-
+        
+});
+ 
  
 </script>
+
 
 
 {% endblock %}

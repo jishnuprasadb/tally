@@ -11514,7 +11514,7 @@ def payment_vouchers(request):
 
         comp = Companies.objects.get(id = t_id)
         
-        name=request.POST.get('ptype')
+        name = request.POST.get('ptype')
      
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
 
@@ -11525,11 +11525,6 @@ def payment_vouchers(request):
         
         counter = 1 if v is None else int(v['pid']) + 1
 
-        #payment_voucher(pid = counter, voucher = vouch).save()
-
-        ltype = ledg_grp_all
-             
-     
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
@@ -11538,7 +11533,7 @@ def payment_vouchers(request):
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
                     'v' : counter,
-                  }
+                }
         return render(request,'payment_voucher.html',context)
 
 def create_payment_voucher(request):
@@ -11551,9 +11546,7 @@ def create_payment_voucher(request):
         comp = Companies.objects.get(id = t_id)
         
 
-        if request.method=="POST":
-            
-            name=request.POST['type']
+        name=request.POST['type']
                        
 
         vouch = Voucher.objects.filter(voucher_type = 'Payment').get(voucher_name = name)
@@ -11568,7 +11561,7 @@ def create_payment_voucher(request):
 
             #payment_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return redirect('payment_vouchers')
+        return redirect('/')
         
 
 def list_receipt_voucher(request):
@@ -11652,16 +11645,16 @@ def create_receipt_voucher(request):
             amount=request.POST.get('total')
             nrt = request.POST['narrate']
             
-            receipt_voucher(rid = rid,account = accnt, date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            #receipt_voucher(rid = rid,account = accnt, date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return redirect('receipt_vouchers')
+        return redirect('/')
 
 
 def cur_balance(request):
-    if request.method == 'POST':
-        i = id
-    ledg = tally_ledger.objects.filter(id = i)
-    return render(request,'curbalance.html', {'ledg' : ledg })
+    i = request.GET.get('id')
+    ledg = tally_ledger.objects.get(id = i)
+    print(ledg)
+    return render(request,'curbalance.html', {'val' : i, 'ledg' : ledg })
 
 
 
