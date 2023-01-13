@@ -1,7 +1,7 @@
 <style>
-.txt{
+.balance{
     height: 20px; 
-    width: 50px;
+    width: 75px;
     background-color: rgb(255, 229, 183);
     color: #000;
     text-align: left;
@@ -11,6 +11,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 
-<input type="text" value="{{ledg.opening_blnc}}" readonly class="txt">
-<input type="text" value="{{ledg.opening_blnc_type}}" readonly class="txt">
+
+{% if ledger.opening_blnc_type == 'Cr'%}
+<input type="text" id = 'led' value="{{ledger.opening_blnc}}" readonly class="balance" style="color: red;">
+<input type="text" id = 'ledt' value="{{ledger.opening_blnc_type}}" readonly class="balance" style="width: 30px; color: red;">
+{% else  %}
+<input type="text" id = 'led' value="{{ledger.opening_blnc}}" readonly class="balance">
+<input type="text" id = 'ledt' value="{{ledger.opening_blnc_type}}" readonly class="balance" style="width: 30px;">
+
+{% endif%}
 

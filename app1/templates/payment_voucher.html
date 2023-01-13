@@ -31,73 +31,7 @@
             
         } 
 
-        .close {
-            position: absolute;
-            top: 0px;
-            right: 8px;
-            font-size: 17px;
-            transform: rotate(0deg);
-            color: rgb(0, 0, 0);
-            cursor: pointer;
-            text-decoration: none;
-            text-align: end;
-        }
-        .form-popup {
-            display: none;
-            position: fixed;
-            top: 150px;
-            right: 30px;
-            border: 1px solid #f1f1f1;
-            z-index: 9;
-            width: 300px;
-            height: 200px;
-        }
-        .form-popup1 {
-            display: none;
-            position: fixed;
-            top: 150px;
-            right: 30px;
-            border: 1px solid #f1f1f1;
-            z-index: 9;
-            width: 300px;
-            height: 200px;
-        }
-        .content a:hover {
-            background-color: rgb(238, 167, 75);
-        }
-        .form-container {
-            max-width: 350px;
-            height: 300px;
-            padding: 2px; 
-        }
-        .form-container1 {
-            max-width: 350px;
-            height: 300px;
-            padding: 2px; 
-        }
-        .btns_prnt{
-            color: #fff;
-            width: 100%;
-            cursor:pointer;
-            background-color: rgba(240, 248, 255, 0);
-            border: none;
-        }
-        .btns_prnt:hover{
-            background-color:#5bc9e4;
-            color: rgb(15, 14, 14);
-        }
-        .btn{
-            text-align: end;
-        }
-        .ScrollStyle{
-            overflow-y: scroll;
-        }
-        .hide{
-            display: none;
-        }
-        .ScrollStyle1{
-            overflow-y: scroll;
-        }
+        
         .acc {
             color: #000;
             text-align:top;
@@ -176,12 +110,15 @@
                     </span>
                     <span class="input-group">
                     <label>&nbsp;&nbsp;Current Balance :&nbsp;&nbsp;</label>
-                       <label id ='curbalance'></label>
+                    <label id ='curbalance'></label>
+                     
+                   
                     </span>
                         </div>
                       
                        </th>
-                    <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);border-left:none ; color: #000;">                           
+                    <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
+                            border-left:none ; color: #000;">                           
                       
                       <div >{{date1 | date:'d-M-Y'}}</div>
                       <input type="hidden" name = 'date1' value="{{date1|date:'Y-m-d'}}">
@@ -207,8 +144,9 @@
                                         {% for i in ledg_all %}
                                         <option id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
                                         {% endfor %}
+
                                         </select> 
-                                        <label class = 'blnc1' style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label>
+                                        <label class = 'blnc1' style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label>
                                         <label class = 'blnc1' id="blnc1" class="p-0 mt-0" style="color: #000;"></label>
                                     
                                 </td>
@@ -250,14 +188,18 @@
 </div>
 
 
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     
+
+    
 <script>
-     $("#payacc").change(function () {
+    $("#payacc").change(function () {
     const accid = $(this).val();
     console.log(accid);
     $.ajax({
@@ -267,8 +209,11 @@
         },
         
         success: function (data) {
+            
+
             $("#curbalance").html(data);
             console.log(data);
+            console.log(a);
         }
         
     });
@@ -277,12 +222,12 @@
 
 
 $("#payacc1").change(function () {
-    const accid = $(this).val();
-    console.log(accid);
+    const parid = $(this).val();
+    console.log(parid);
     $.ajax({
         url: '{% url "cur_balance" %}',
         data: {
-                'id': accid
+                'id': parid
         },
         
         success: function (data) {
@@ -296,11 +241,7 @@ $("#payacc1").change(function () {
 </script>
 
 <script type="text/javascript">
-function setvalue(name){
-    
-    document.getElementById('acc').value= name;
-}
-        
+
 
             const txt1 = document.getElementById('amnt');
             const txt2 = document.getElementById('total');
@@ -311,61 +252,82 @@ function setvalue(name){
             txt1.addEventListener('change',setTotal)
 
 
-  /*const txt3 = document.getElementById('acc').value;
-  const txt4 = document.getElementById('curbalance');
-  console.log(txt3);
-  $("#accc").change(function () {
-  $.ajax({
-        url: '{% url "cur_balance" %}',
-        
-        data: {
-                'id': txt3
-        },
-        
-        success: function (data) {
-            $("#curbalance").html(data);
-        }
-    });
-});
-    
-  
-
-
-            const txt5 = document.getElementById('acc1');
-            const txt6 = document.getElementById('blnc1');
-            function setBlnc1(){
-
-                txt6.innerHTML = txt5.value;
-                
-            }
-            txt5.addEventListener('change',setBlnc1)*/
-
-
-
-
-
 $(document).ready(function() {
     var max_fields = 10; 
     var x = 1;
+    var y= 0;
               
     $(".amnt").on ('change', function() {
         if (x < max_fields) { 
             x++; 
-            $(".part").append(
-
-                '<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="acc'+x+'" name="acc1" class=" rows acc1 txt form-control m-2 p-0" >{% for i in ledg_all %}<option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
-
-            const txt7 = document.getElementById('acc'+x);
-            const txt8 = document.getElementById('blnc'+x);
-            function setBlnc1(){
-
-                txt8.innerHTML = txt7.value;
-                
-            }
-            txt7.addEventListener('change',setBlnc1)
+            $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" >{% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
+            $("#payacc"+x).change(function () {
+                const parid = $(this).val();
+                console.log(parid);
+                $.ajax({
+                    url: '{% url "cur_balance" %}',
+                    data: {
+                            'id': parid
+                    },
+                    
+                    success: function (data) {
+                        $("#blnc"+x).html(data);
+                        console.log(data);
+                    }
+                    
+                });
+    
+            });
+                    
+      
         } 
+
+        const curblnc = $('#led').val();
+        const curblnct = $('#ledt').val();
+        const amount = $('.amnt').val()
+        const ac = $('#payacc').val();
+
+        $.ajax({
+                    url: '{% url "cur_balance_change" %}',
+                    data: {
+                            'curblnc': curblnc,
+                            'amount' : amount,
+                            'curblnct': curblnct,
+                            'ac' : ac,
+                    },
+                    
+                    success: function (data) {
+                        //$('#curbalance').remove();
+                        $("#curbalance").html(data);
+                        console.log(data);
+                    }
+                    
+                });
         
-        
+        if (y < max_fields) { 
+            y++; 
+            pac = $("#payacc"+y).val()
+            
+            console.log(pid);
+            $.ajax({
+                    url: '{% url "cur_balance_change" %}',
+                    data: {
+                            'curblnc': curblnc,
+                            'amount' : amount,
+                            'curblnct': curblnct,
+                            'ac' : pac,
+                    },
+                    
+                    success: function (data) {
+                        //$('#curbalance').remove();
+                        $("#blnc"+y).html(data);
+                        console.log(data);
+                    }
+                    
+                });
+                    
+      
+        } 
     });
         
 });

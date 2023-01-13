@@ -783,6 +783,6 @@ urlpatterns = [
     path('create_receipt_voucher' , views.create_receipt_voucher,name='create_receipt_voucher'),       
 
     path('cur_balance' , views.cur_balance,name='cur_balance'),       
-
+    path('cur_balance_change' , views.cur_balance_change,name='cur_balance_change'),       
 
      ]

@@ -24,6 +24,7 @@ from multiprocessing import context
 from symtable import Symbol
 from unicodedata import name
 from urllib import request
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.http import JsonResponse
@@ -11652,9 +11653,28 @@ def create_receipt_voucher(request):
 
 def cur_balance(request):
     i = request.GET.get('id')
-    ledg = tally_ledger.objects.get(id = i)
-    print(ledg)
-    return render(request,'curbalance.html', {'val' : i, 'ledg' : ledg })
+    ledger = tally_ledger.objects.get(id = i)
+    print(ledger)
+    #return HttpResponse({'ledger' : ledger })
+
+    return render(request,'curbalance.html', {'ledger' : ledger })
+
+def cur_balance_change(request):
+    
+    ac = request.GET.get('ac')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+    if type == 'Dr':
+        val = int(i)- int(j)
+    else:
+        val = int(i)+int(j)
+    ledger = tally_ledger.objects.get(id = ac)
+
+    print(val)
+    print(ledger)
+    #return HttpResponse({'val' : val, 'ledger' : ledger })
+    return render(request,'curbalance_change.html', {'val' : val, 'ledger' : ledger })
 
 
 
