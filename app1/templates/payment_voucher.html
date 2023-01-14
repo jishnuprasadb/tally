@@ -111,7 +111,7 @@
                     <span class="input-group">
                     <label>&nbsp;&nbsp;Current Balance :&nbsp;&nbsp;</label>
                     <label id ='curbalance'></label>
-                     
+                                            
                    
                     </span>
                         </div>
@@ -194,7 +194,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
 
     
@@ -209,11 +209,23 @@
         },
         
         success: function (data) {
-            
+         
+            /*for (var i = 0; i < data.length; i++) {
 
-            $("#curbalance").html(data);
+            // select the element where you want to display the data
+            var element = document.getElementById('#led' + i);
+
+            // set the innerHTML of the element to the corresponding value from the data array
+            element.innerHTML = data[i];
+            }*/
+
+            
+            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].opening_blnc +'> <input id ="ledt" class= "txt" readonly value = '+data[0].opening_blnc_type+'>';
+            console.log(curData);
+            var val = data.opening_blnc;
+            console.log(val);
+            $("#curbalance").html(curData);
             console.log(data);
-            console.log(a);
         }
         
     });
@@ -231,7 +243,9 @@ $("#payacc1").change(function () {
         },
         
         success: function (data) {
-            $("#blnc1").html(data);
+            curData = '<input id ="pled" class= "txt" readonly value = '+data[0].opening_blnc+'> <input id ="pledt" class= "txt" readonly value = '+data[0].opening_blnc_type+'>';
+            console.log(curData);
+            $("#blnc1").html(curData);
             console.log(data);
         }
         
@@ -242,22 +256,14 @@ $("#payacc1").change(function () {
 
 <script type="text/javascript">
 
-
-            const txt1 = document.getElementById('amnt');
-            const txt2 = document.getElementById('total');
-            function setTotal(){
-
-                txt2.innerHTML = txt1.value;
-            }
-            txt1.addEventListener('change',setTotal)
-
-
 $(document).ready(function() {
-    var max_fields = 10; 
+    var max_fields = 20; 
     var x = 1;
-    var y= 0;
+    
+    
+    
               
-    $(".amnt").on ('change', function() {
+    $("#amnt").on ('change', function() {
         if (x < max_fields) { 
             x++; 
             $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" >{% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt" name = "amnt"></td></tr>')
@@ -276,17 +282,35 @@ $(document).ready(function() {
                     }
                     
                 });
+
+                $.ajax({
+                    url: '{% url "pcur_balance_change" %}',
+                    data: {
+                            'curblnc': curblnc,
+                            'amount' : amount,
+                            'curblnct': curblnct,
+                            'ac' : parid,
+                    },
+                    
+                    success: function (data) {
+
+                        $("#blnc"+x).html(data);
+                        console.log(data);
+                    }
+                    
+                }); 
     
             });
-                    
+
+                 
       
         } 
 
+        
+        const ac = $('#payacc').val();
         const curblnc = $('#led').val();
         const curblnct = $('#ledt').val();
-        const amount = $('.amnt').val()
-        const ac = $('#payacc').val();
-
+        const amount = $('#amnt').val();
         $.ajax({
                     url: '{% url "cur_balance_change" %}',
                     data: {
@@ -297,37 +321,35 @@ $(document).ready(function() {
                     },
                     
                     success: function (data) {
-                        //$('#curbalance').remove();
                         $("#curbalance").html(data);
                         console.log(data);
                     }
                     
                 });
-        
-        if (y < max_fields) { 
-            y++; 
-            pac = $("#payacc"+y).val()
-            
-            console.log(pid);
+
+             
+            const pac = $('#payacc1').val();
+            const curblnc1 = $('#pled').val();
+            const curblnct1 = $('#pledt').val();
+            //const amount = $('#amnt').val();
+
             $.ajax({
-                    url: '{% url "cur_balance_change" %}',
-                    data: {
-                            'curblnc': curblnc,
-                            'amount' : amount,
-                            'curblnct': curblnct,
-                            'ac' : pac,
-                    },
-                    
-                    success: function (data) {
-                        //$('#curbalance').remove();
-                        $("#blnc"+y).html(data);
-                        console.log(data);
-                    }
-                    
-                });
-                    
-      
-        } 
+                url: '{% url "pcur_balance_change" %}',
+                data: {
+                        'curblnc': curblnc1,
+                        'amount' : amount,
+                        'curblnct': curblnct1,
+                        'pac' : pac,
+                },
+                
+                success: function (data) {
+                    $("#blnc1").html(data);
+                    console.log(data);
+                }
+            
+            });
+        
+       
     });
         
 });

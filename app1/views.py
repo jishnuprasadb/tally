@@ -11653,11 +11653,14 @@ def create_receipt_voucher(request):
 
 def cur_balance(request):
     i = request.GET.get('id')
-    ledger = tally_ledger.objects.get(id = i)
-    print(ledger)
-    #return HttpResponse({'ledger' : ledger })
+    ledger = tally_ledger.objects.values().filter(id = i)
+    
+   
+    data = list(ledger)
+    return JsonResponse(data, safe = False)
 
-    return render(request,'curbalance.html', {'ledger' : ledger })
+    #return render(request,'payment_voucher.html',{'ledger' : ledger})
+
 
 def cur_balance_change(request):
     
@@ -11676,7 +11679,21 @@ def cur_balance_change(request):
     #return HttpResponse({'val' : val, 'ledger' : ledger })
     return render(request,'curbalance_change.html', {'val' : val, 'ledger' : ledger })
 
+def pcur_balance_change(request):
+    
+    ac = request.GET.get('pac')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+    if type == 'Cr':
+        val = int(i)- int(j)
+    else:
+        val = int(i)+int(j)
+    ledger = tally_ledger.objects.get(id = ac)
 
+    print(val)
+    print(ledger)
+    return render(request,'pcurbalance_change.html', {'val' : val, 'ledger' : ledger })
 
 
     
