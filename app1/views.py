@@ -11708,5 +11708,7 @@ def pcur_balance_change(request):
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
 
+
+
     
     

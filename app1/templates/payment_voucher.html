@@ -168,10 +168,10 @@
                         {% endif %}    
                       <td colspan="2" class="text-right" style="border: none; " >
                         <label class="text-dark text-right" >Total : </label>
-                        <input type="text" class="txt mt-2" id ='total' name = 'total' readonly>
+                        <input type="text" class="txt mt-2 p-0" id ='total' name = 'total' readonly>
                     </td>
                     </tfoot>
-                    
+                    <label id = 'new'></label>
                 </table>
                 
               </div>
@@ -257,17 +257,17 @@ $("#payacc1").change(function () {
 
 $(document).ready(function() {
  
-    var x = 1;
+    var x = 1, tot = 0;
    
     $('#amnt1').on('change', function() {
     
         if (x < 20) { 
             x++; 
             
-
+            tot = $(this).val();
             $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" ><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+x+'" name = "amnt"></td></tr>')
-
-            
+            $('#total1').html(tot);
+            console.log(tot);
             $("#payacc"+x).change(function () {
                 const parid = $(this).val();
                 //console.log(parid);
@@ -293,7 +293,7 @@ $(document).ready(function() {
                 const curblnc1 = $('#pled').val();
                 const curblnct1 = $('#pledt').val();
                 const amount = $('#amnt'+x).val();
-
+                tot += amount;
             $.ajax({
                 url: '{% url "pcur_balance_change" %}',
                 data: {
@@ -305,7 +305,7 @@ $(document).ready(function() {
                 
                 success: function (data) {
                     $("#blnc"+x).html(data);
-                   // console.log(data);
+                   console.log(tot);
                 }
             
             });
@@ -313,11 +313,7 @@ $(document).ready(function() {
     
             });
 
-                 
-      
-        
-        
-        
+
         const ac = $('#payacc').val();
         const curblnc = $('#led').val();
         const curblnct = $('#ledt').val();
@@ -350,6 +346,7 @@ $(document).ready(function() {
                         'amount' : amount,
                         'curblnct': curblnct1,
                         'pac' : pac,
+                        'tot' : tot,
                 },
                 
                 success: function (data) {
@@ -362,34 +359,28 @@ $(document).ready(function() {
        
     });
     
+    
+    
 
 });
+
+
  
+$(document).ready(function(){ 
+    var tot = 0;
+    for (i = 0 ;i< 20; i++) {
+        $('#amnt'+x).on('change',function(){
+           
+            tot = $(this).val();
+        });
+        
+    }
+    var total = document.getElementById('new');
+    total.innerHTML = tot;
+});
  
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-
-    $(document).ready(function(){
-        var tot = 0;
-        //for(i=1; i<=20 ;i++){
-            //$('#amnt'+i).on('change',function(){
-              //  val = $(this).val()
-              //  console.log(val);
-
-                
-              //  tot += parseFloat(val);
-//console.log(tot);
-                    
-            //});
-        //}
-                tot = document.getElementById('amnt1').value;
-                console.log(tot);
-                $('#total').html(tot);
-    });
-
-</script>
 
 
 
