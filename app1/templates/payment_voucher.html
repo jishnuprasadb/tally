@@ -111,7 +111,6 @@
                     <span class="input-group">
                     <label>&nbsp;&nbsp;Current Balance :&nbsp;&nbsp;</label>
                     <label id ='curbalance'></label>
-                                            
                    
                     </span>
                         </div>
@@ -126,7 +125,7 @@
                 </th>
 
                   </tr>
-                   
+
                     <tbody style="border-color: rgb(112, 111, 111); " class = 'part'>
                         <div>
                         <tr>
@@ -168,10 +167,10 @@
                         {% endif %}    
                       <td colspan="2" class="text-right" style="border: none; " >
                         <label class="text-dark text-right" >Total : </label>
-                        <input type="text" class="txt mt-2 p-0" id ='total' name = 'total' readonly>
+                        <!--<input type="text" class="txt " id ='total' name = 'total' readonly>-->
+                        <label class="txt" id ='total' name = 'total' ></label>
                     </td>
                     </tfoot>
-                    <label id = 'new'></label>
                 </table>
                 
               </div>
@@ -254,20 +253,19 @@ $("#payacc1").change(function () {
 
 
 
+var x = 1;
 
 $(document).ready(function() {
  
-    var x = 1, tot = 0;
    
-    $('#amnt1').on('change', function() {
+    $('#amnt'+x).on('change', function() {
     
-        if (x < 20) { 
+        if (isNaN('#amnt'+x)) { 
             x++; 
             
-            tot = $(this).val();
             $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" ><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+x+'" name = "amnt"></td></tr>')
-            $('#total1').html(tot);
-            console.log(tot);
+            
+
             $("#payacc"+x).change(function () {
                 const parid = $(this).val();
                 //console.log(parid);
@@ -289,11 +287,11 @@ $(document).ready(function() {
                     }
                     
                 });
+
                 const pac = $('#payacc'+x).val();
                 const curblnc1 = $('#pled').val();
                 const curblnct1 = $('#pledt').val();
                 const amount = $('#amnt'+x).val();
-                tot += amount;
             $.ajax({
                 url: '{% url "pcur_balance_change" %}',
                 data: {
@@ -313,11 +311,12 @@ $(document).ready(function() {
     
             });
 
+        }
 
         const ac = $('#payacc').val();
         const curblnc = $('#led').val();
         const curblnct = $('#ledt').val();
-        const amount = $('#amnt1').val();
+        var amount = $('#amnt1').val();
         $.ajax({
                     url: '{% url "cur_balance_change" %}',
                     data: {
@@ -346,7 +345,7 @@ $(document).ready(function() {
                         'amount' : amount,
                         'curblnct': curblnct1,
                         'pac' : pac,
-                        'tot' : tot,
+                        
                 },
                 
                 success: function (data) {
@@ -355,7 +354,7 @@ $(document).ready(function() {
                 }
             
             });
-    }
+    
        
     });
     
@@ -363,21 +362,37 @@ $(document).ready(function() {
     
 
 });
+    
+        /*const txt1 = document.getElementById('amnt1');
+        const txt2 = document.getElementById('total');
+        function setTotal(){
 
+            txt2.innerHTML = txt1.value;
+        }
+        txt1.addEventListener('change',setTotal)*/
 
- 
-$(document).ready(function(){ 
-    var tot = 0;
-    for (i = 0 ;i< 20; i++) {
-        $('#amnt'+x).on('change',function(){
-           
-            tot = $(this).val();
-        });
-        
-    }
-    var total = document.getElementById('new');
-    total.innerHTML = tot;
-});
+</script>
+
+<script>
+var tot = document.getElementById("total");
+
+function calculateTotal() {
+  var sum = 0;
+  for(var i = 1; i <= 20; i++) {
+    var value1 = parseInt(document.getElementById("amnt" + i).value);
+    sum += value1;
+    console.log(sum);
+  }
+  
+  tot.innerHTML = sum;
+  //$("#total").html(sum);
+
+}
+
+for(var i = 1; i <=20; i++) {
+    document.getElementById("amnt" + i).addEventListener("input", calculateTotal);
+}
+
  
 </script>
 
