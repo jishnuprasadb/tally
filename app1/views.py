@@ -11666,6 +11666,7 @@ def cur_balance_change(request):
     i = request.GET.get('curblnc')
     j = request.GET.get('amount')
     type = request.GET.get('curblnct')
+
     if type == 'Dr':
         v1 = int(i)- int(j)
         if v1 < 0:
@@ -11675,8 +11676,9 @@ def cur_balance_change(request):
             open_type = 'Dr'
             val = v1
     else:
-        val = int(i)+int(j)
+        val = int(i) + int(j)
         open_type = 'Cr'
+
     ledger = tally_ledger.objects.get(id = ac)
 
     print(val)
@@ -11690,6 +11692,7 @@ def pcur_balance_change(request):
     i = request.GET.get('curblnc')
     j = request.GET.get('amount')
     type = request.GET.get('curblnct')
+    
     if type == 'Cr':
         v2 = int(i)- int(j)
         if v2 < 0:
@@ -11699,13 +11702,15 @@ def pcur_balance_change(request):
             val = v2
             open_type = 'Cr'
     else:
-        val = int(i)+int(j)
+        val = int(i) + int(j)
         open_type = 'Dr'
+
     ledger = tally_ledger.objects.get(id = ac)
 
     print(val)
     print(ledger)
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
+
 
 
 

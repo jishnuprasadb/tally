@@ -100,7 +100,6 @@
                             <option id = "opt" >&nbsp;&nbsp;Select Account </option> 
                             {% for i in ledg %}
                             <option id = "opt" name ='opt' value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
-                            <!--<option id = "opt" value="{{i.opening_blnc}} {{i.opening_blnc_type}}" >&nbsp;&nbsp;{{i.name}}</option> -->
 
                             
                             {% endfor %}
@@ -150,7 +149,7 @@
                                     
                                 </td>
                                 <td colspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt'></td>
+                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt' oninput="calculateTotal();"></td>
                                     
 
                             </tr>
@@ -167,8 +166,8 @@
                         {% endif %}    
                       <td colspan="2" class="text-right" style="border: none; " >
                         <label class="text-dark text-right" >Total : </label>
-                        <!--<input type="text" class="txt " id ='total' name = 'total' readonly>-->
-                        <label class="txt" id ='total' name = 'total' ></label>
+                        <input type="text" class="txt " id ='total' name = 'total' readonly>
+                        <!--<label class="txt" id ='total' name = 'total' ></label>-->
                     </td>
                     </tfoot>
                 </table>
@@ -263,7 +262,7 @@ $(document).ready(function() {
         if (isNaN('#amnt'+x)) { 
             x++; 
             
-            $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" ><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+x+'" name = "amnt"></td></tr>')
+            $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" ><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+x+'" name = "amnt" oninput="calculateTotal();"></td></tr>')
             
 
             $("#payacc"+x).change(function () {
@@ -374,26 +373,27 @@ $(document).ready(function() {
 </script>
 
 <script>
-var tot = document.getElementById("total");
+
 
 function calculateTotal() {
   var sum = 0;
+  var val1 = parseInt( document.getElementById("amnt1").value);
+  var val2 = parseInt( document.getElementById("amnt" + i).value);
+
   for(var i = 1; i <= 20; i++) {
-    var value1 = parseInt(document.getElementById("amnt" + i).value);
-    sum += value1;
+    var value1 = parseInt( document.getElementById("amnt" + i).value);
+    if( value1 !== null && ! isNaN(value1)){
+        sum += value1;
+        
+    }
     console.log(sum);
+    $("#total").html(sum);
+
   }
   
-  tot.innerHTML = sum;
-  //$("#total").html(sum);
 
 }
 
-for(var i = 1; i <=20; i++) {
-    document.getElementById("amnt" + i).addEventListener("input", calculateTotal);
-}
-
- 
 </script>
 
 
