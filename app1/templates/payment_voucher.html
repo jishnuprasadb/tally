@@ -137,7 +137,7 @@
                              
                                 <td colspan="12" style="border: none;" class="mt-4">
 
-                                        <select id="payacc1"  name="acc1" class=" rows acc form-control m-2 p-0"  >
+                                        <select id="payacc1"  name="acc1" class=" rows acc payacc form-control m-2 p-0" onchange="changeCurbalance();" >
                                             <option id = "opt" >&nbsp;&nbsp;Select Particular </option> 
                                             {% for i in ledg_all %}
                                         <option id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> 
@@ -149,7 +149,7 @@
                                     
                                 </td>
                                 <td colspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt' oninput="calculateTotal();"></td>
+                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt' oninput='calculateTotal();' onchange="createRow()"></td>
                                     
 
                             </tr>
@@ -166,8 +166,8 @@
                         {% endif %}    
                       <td colspan="2" class="text-right" style="border: none; " >
                         <label class="text-dark text-right" >Total : </label>
-                        <input type="text" class="txt " id ='total' name = 'total' readonly>
-                        <!--<label class="txt" id ='total' name = 'total' ></label>-->
+                        <!--<input type="text" class="txt " id ='total' name = 'total' readonly>-->
+                        <label class="txt" id ='total' name = 'total' ></label>
                     </td>
                     </tfoot>
                 </table>
@@ -197,6 +197,10 @@
 
     
 <script>
+
+/*-----------------------set current balance-----------*/
+
+
     $("#payacc").change(function () {
     const accid = $(this).val();
     //console.log(accid);
@@ -222,10 +226,15 @@
     
 });
 
-    
-$("#payacc1").change(function () {
-    const parid = $(this).val();
-    //console.log(parid);
+
+
+function changeCurbalance(){
+
+    const id1 = $(this).attr("id")
+    const parid =$('#payacc'+id1).val();
+    //console.log(id1);
+    //console.log('#blnc'+id1)
+
     $.ajax({
         url: '{% url "cur_balance" %}',
         data: {
@@ -238,55 +247,62 @@ $("#payacc1").change(function () {
             else{
             curData = '<input id ="pled" class= "txt" readonly value = '+ data[0].opening_blnc +' style="color: red;"> <input id ="pledt" style="color: red;"  class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
             //console.log(curData);
-            $("#blnc1").html(curData);
-            //console.log(data);
+            $("#blnc"+id1).html(curData);
         }
         
     });
     
-});
-
-</script>
-
-<script >
+    
+}
+/*-----------------------set current balance-----------*/
 
 
+/*----------------- create new row-------------*/
+var id = 1
+function createRow(){
+   
+    id++;
+    $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+id+'" name="acc1" class=" rows acc form-control m-2 p-0" onchange="changeCurbalance();"><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+id+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+id+'" oninput="calculateTotal();" onchange="createRow()" name = "amnt" ></td></tr>')
 
-var x = 1;
+       
+}
+
+/*----------------- create new row-------------*/
+
+
+
+/*----------------change current balance while entering amount-------------------*/
+
 
 $(document).ready(function() {
- 
-   
-    $('#amnt'+x).on('change', function() {
+    var x = document.getElementsByClassName('amnt');
+    console.log('#amnt'+x);
+
+    $('#amnt'+x ).on('change', function() {
     
-        if (isNaN('#amnt'+x)) { 
-            x++; 
-            
-            $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+x+'" name="acc1" class=" rows acc form-control m-2 p-0" ><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+x+'" class="p-0 mt-0" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+x+'" name = "amnt" oninput="calculateTotal();"></td></tr>')
-            
 
+        const ac = $('#payacc').val();
+        const curblnc = $('#led').val();
+        const curblnct = $('#ledt').val();
+        var amount = $('#amnt'+x).val();
+        $.ajax({
+                url: '{% url "cur_balance_change" %}',
+                data: {
+                        'curblnc': curblnc,
+                        'amount' : amount,
+                        'curblnct': curblnct,
+                        'ac' : ac,
+                },
+                
+                success: function (data) {
+                    $("#curbalance").html(data);
+                    ///console.log(data);
+                }
+                
+            });
+        x++;
             $("#payacc"+x).change(function () {
-                const parid = $(this).val();
-                //console.log(parid);
-                $.ajax({
-                    url: '{% url "cur_balance" %}',
-                    data: {
-                            'id': parid
-                    },
-                    
-                    success: function (data) {
-
-                        if(data[0].opening_blnc_type == 'Dr'){       
-                        curData = '<input id ="pled" class= "txt" readonly value = '+ data[0].opening_blnc +'> <input id ="pledt" class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
-                        else{
-                        curData = '<input id ="pled" class= "txt" readonly value = '+ data[0].opening_blnc +' style="color: red;"> <input id ="pledt" style="color: red;"  class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
-
-                        $("#blnc"+x).html(curData);
-                        //console.log(data);
-                    }
-                    
-                });
-
+              
                 const pac = $('#payacc'+x).val();
                 const curblnc1 = $('#pled').val();
                 const curblnct1 = $('#pledt').val();
@@ -302,7 +318,6 @@ $(document).ready(function() {
                 
                 success: function (data) {
                     $("#blnc"+x).html(data);
-                   console.log(tot);
                 }
             
             });
@@ -310,27 +325,9 @@ $(document).ready(function() {
     
             });
 
-        }
+        //}
 
-        const ac = $('#payacc').val();
-        const curblnc = $('#led').val();
-        const curblnct = $('#ledt').val();
-        var amount = $('#amnt1').val();
-        $.ajax({
-                    url: '{% url "cur_balance_change" %}',
-                    data: {
-                            'curblnc': curblnc,
-                            'amount' : amount,
-                            'curblnct': curblnct,
-                            'ac' : ac,
-                    },
-                    
-                    success: function (data) {
-                        $("#curbalance").html(data);
-                        ///console.log(data);
-                    }
-                    
-                });
+        
 
              
             const pac = $('#payacc1').val();
@@ -361,42 +358,26 @@ $(document).ready(function() {
     
 
 });
-    
-        /*const txt1 = document.getElementById('amnt1');
-        const txt2 = document.getElementById('total');
-        function setTotal(){
 
-            txt2.innerHTML = txt1.value;
-        }
-        txt1.addEventListener('change',setTotal)*/
+/*--------------------------------------------------------------------*/
 
-</script>
-
-<script>
-
+/*--------- Total----------*/
 
 function calculateTotal() {
-  var sum = 0;
-  var val1 = parseInt( document.getElementById("amnt1").value);
-  var val2 = parseInt( document.getElementById("amnt" + i).value);
-
-  for(var i = 1; i <= 20; i++) {
-    var value1 = parseInt( document.getElementById("amnt" + i).value);
-    if( value1 !== null && ! isNaN(value1)){
-        sum += value1;
-        
+    var sum = 0 ;
+    var count = $('.amnt').length
+    
+  for(var i = 1; i <= count; i++) {
+    var value1 = document.getElementById("amnt" + i);
+    if(isNaN(value1.value) == false){
+        sum += parseInt(value1.value) ;
     }
-    console.log(sum);
-    $("#total").html(sum);
-
   }
-  
+  //console.log(value1);
+  document.getElementById('total').innerHTML = sum;
 
 }
 
 </script>
-
-
-
 
 {% endblock %}
