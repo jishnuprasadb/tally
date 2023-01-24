@@ -1705,9 +1705,8 @@ class payment_voucher(models.Model):
     pid = models.IntegerField(null=True)
     account = models.CharField(max_length= 255, null=True)
     date = models.DateField(blank = True, null= True)
-    #particulars = models.CharField(max_length=255,null= True)
     amount = models.IntegerField(null= True)
-    narration = models.CharField(max_length=255)
+    narration = models.CharField(max_length=255,null=True)
 
 class receipt_voucher(models.Model):
 
@@ -1716,8 +1715,7 @@ class receipt_voucher(models.Model):
     rid = models.IntegerField(null=True)
     account = models.CharField(max_length= 255, null=True)
     date = models.DateField(blank = True,null= True)
-    #particulars = models.CharField(max_length=255,null= True)
     amount = models.IntegerField(null= True)
-    narration = models.CharField(max_length=255)
+    narration = models.CharField(max_length=255,null=True)
 
         

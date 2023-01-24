@@ -11521,7 +11521,7 @@ def payment_vouchers(request):
 
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
-
+     
         v  = payment_voucher.objects.values('pid').last()
         
         counter = 1 if v is None else int(v['pid']) + 1
@@ -11558,11 +11558,14 @@ def create_payment_voucher(request):
             accnt = request.POST['acc']
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
-            nrt = request.POST['narrate']
+            nrt = request.POST.get('narrate')
 
-            #payment_voucher(pid = pid,account = accnt,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            account = tally_ledger.objects.values('name').get(id = accnt)
+            
+            print(amount)
+            payment_voucher(pid = pid,account = account['name'],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return redirect('/')
+        return render(request,'payment_voucher.html')
         
 
 def list_receipt_voucher(request):
@@ -11598,7 +11601,7 @@ def receipt_vouchers(request):
 
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
-
+      
         v  = receipt_voucher.objects.values('rid').last()
         
         counter = 1 if v is None else int(v['rid']) + 1
@@ -11606,8 +11609,6 @@ def receipt_vouchers(request):
         #receipt_voucher(pid = counter, voucher = vouch).save()
              
      
-        '''date1 = date.today().strftime('%d-%b-%y')
-        day1 = date.today().strftime('%A')'''
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
@@ -11619,7 +11620,8 @@ def receipt_vouchers(request):
                   }
         
         return render(request,'receipt_voucher.html',context)
-
+        
+     
 def create_receipt_voucher(request):
 
     if 't_id' in request.session:
@@ -11645,8 +11647,10 @@ def create_receipt_voucher(request):
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
             nrt = request.POST['narrate']
+
+            account = tally_ledger.objects.values('name').get(id = accnt)
             
-            #receipt_voucher(rid = rid,account = accnt, date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            receipt_voucher(rid = rid,account = account['name'], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
         return redirect('/')
 
@@ -11680,11 +11684,10 @@ def cur_balance_change(request):
         open_type = 'Cr'
 
     ledger = tally_ledger.objects.get(id = ac)
-
-    print(val)
-    print(ledger)
-    #return HttpResponse({'val' : val, 'ledger' : ledger })
-    return render(request,'curbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
+    context = {'val' : val,'open_type': open_type, 'ledger' : ledger }
+    
+    #return JsonResponse(context,safe=False)
+    return render(request,'curbalance_change.html', context)
 
 def pcur_balance_change(request):
     
@@ -11704,6 +11707,58 @@ def pcur_balance_change(request):
     else:
         val = int(i) + int(j)
         open_type = 'Dr'
+
+    ledger = tally_ledger.objects.get(id = ac)
+
+    print(val)
+    print(ledger)
+    return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
+
+def receipt_cur_balance_change(request):
+    
+    ac = request.GET.get('ac')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+
+    if type == 'Cr':
+        v2 = int(i)- int(j)
+        if v2 < 0:
+            val = abs(v2)
+            open_type = 'Dr'
+        else:
+            val = v2
+            open_type = 'Cr'
+    else:
+        val = int(i) + int(j)
+        open_type = 'Dr'
+    
+
+    ledger = tally_ledger.objects.get(id = ac)
+
+    print(val)
+    print(ledger)
+    #return HttpResponse({'val' : val, 'ledger' : ledger })
+    return render(request,'curbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
+
+def receipt_pcur_balance_change(request):
+    
+    ac = request.GET.get('pac')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+    if type == 'Dr':
+        v1 = int(i)- int(j)
+        if v1 < 0:
+            open_type = 'Cr'
+            val = abs(v1)
+        else:
+            open_type = 'Dr'
+            val = v1
+    else:
+        val = int(i) + int(j)
+        open_type = 'Cr'
+    
 
     ledger = tally_ledger.objects.get(id = ac)
 
