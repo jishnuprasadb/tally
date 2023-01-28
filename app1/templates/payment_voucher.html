@@ -267,7 +267,7 @@ function createRow(){
     const curblnc = $('#led').val();
     const curblnct = $('#ledt').val();
     var amount1= $('#amnt'+id).val();
-
+    console.log(ac)
     $.ajax({
             url: '{% url "cur_balance_change" %}',
             data: {
