@@ -11565,7 +11565,7 @@ def create_payment_voucher(request):
             print(amount)
             payment_voucher(pid = pid,account = account['name'],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return render(request,'payment_voucher.html')
+        return render(request,'/payment_vouchers')
         
 
 def list_receipt_voucher(request):
@@ -11652,7 +11652,7 @@ def create_receipt_voucher(request):
             
             receipt_voucher(rid = rid,account = account['name'], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return redirect('/')
+        return redirect('/receipt_vouchers')
 
 
 def cur_balance(request):
@@ -11682,8 +11682,10 @@ def cur_balance_change(request):
     else:
         val = int(i) + int(j)
         open_type = 'Cr'
+    print(ac)
 
     ledger = tally_ledger.objects.get(id = ac)
+    
     context = {'val' : val,'open_type': open_type, 'ledger' : ledger }
     
     #return JsonResponse(context,safe=False)
@@ -11710,8 +11712,7 @@ def pcur_balance_change(request):
 
     ledger = tally_ledger.objects.get(id = ac)
 
-    print(val)
-    print(ledger)
+    
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
 def receipt_cur_balance_change(request):
@@ -11732,12 +11733,10 @@ def receipt_cur_balance_change(request):
     else:
         val = int(i) + int(j)
         open_type = 'Dr'
-    
+        
 
     ledger = tally_ledger.objects.get(id = ac)
-
-    print(val)
-    print(ledger)
+    
     #return HttpResponse({'val' : val, 'ledger' : ledger })
     return render(request,'curbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
