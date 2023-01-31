@@ -6,52 +6,138 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 
 <style>
+    
+    .close {
+        position: absolute;
+        top: 3px;
+        right: 8px;
+        font-size: 17px;
+        transform: rotate(0deg);
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .popup1 {
+        display: none;
+        position: fixed;
+        top: 150px;
+        right: 30px;
+        border: 1px solid #f1f1f1;
+        z-index: 9;
+        width: 300px;
+        height: 300px;
+    }
+    .popup2 {
+        display: none;
+        position: fixed;
+        top: 150px;
+        left: 400px;
+        border: 1px solid #f1f1f1;
+        z-index: 9;
+        width: 500px;
+        height: 350px;
+    }
+    .content a:hover {
+        background-color: rgb(238, 167, 75);
+    }
+    .form-container1 {
+        max-width: 350px;
+        height: 300px;
+        padding: 2px; 
+    }
+    .form-container2 {
+        max-width: 500px;
+        height: 200px;
+        padding: 2px; 
+        margin-left: 100px;
+        margin-top: 100px;
+    }
+    .btns_prnt{
+        color: #fff;
+        width: 100%;
+        cursor:pointer;
+        background-color: rgba(240, 248, 255, 0);
+        border: none;
+    }
+    .btns_prnt:hover{
+        background-color:#5bc9e4;
+        color: rgb(15, 14, 14);
+    }
+    .bt{
+        text-align: end;
+    }
+    .ScrollStyle{
+        overflow-y: scroll;
+    }
+    .hide{
+        display: none;
+    }
+    .enter{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(124, 186, 224);
+}
 
-        .enter{
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background-color: rgb(124, 186, 224);
-                }
 
-
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-            }
-            
-           
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
         
-        #opt {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            background-color: rgb(255, 229, 183);
-            
-        } 
-
         
-        .acc {
-            color: #000;
-            text-align:top;
-            padding: 0px;
-            height: 25px; 
-            width: 150px;
-            background-color: rgb(255, 229, 183);
-            
-        } 
+    
+    #opt {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        background-color: rgb(255, 229, 183);
+        
+    } 
 
-        .txt{
-            height: 20px; 
-            width: 150px;
-            padding: 0;
-            background-color: rgb(255, 229, 183);
-            color: #000;
-            text-align: left;
-            
-        }
+    
+    .acc {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        height: 25px; 
+        width: 150px;
+        background-color: rgb(255, 229, 183);
+        
+    } 
 
+    .txt{
+        height: 20px; 
+        width: 150px;
+        padding: 0;
+        background-color: rgb(255, 229, 183);
+        color: #000;
+        text-align: left;
+        
+    }
+    .butn{
+        
+        height: 25px; 
+        width: 32px;
+        padding: 0;
+        background-color: rgb(17, 54, 86);
+        color: azure;
+        text-align: left;
+        
+    
+    }
+    /*.modal-content{
+        position: relative;
+        color:rgb(17, 54, 86) ;
+        width: 400px;
+        height: 250px;
+        border-radius: 5px;
+        color: azure;
+        margin-top: 150px;
+        margin-left: 80px;
+    }*/
+  
         
 </style>
 <div class="container-fluid" >
@@ -149,10 +235,12 @@
                                     
                                 </td>
                                 <td colspan="2" class="text-right mt-0" style="border: none; ">
-                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt' oninput='calculateTotal();' onchange="createRow()"></td>
-                                    
-
+                                    <input type="number" class = 'txt amnt' id= 'amnt1' name = 'amnt' oninput='calculateTotal();' onchange="createRow()">
+                                    <button type="button" class="butn" id = 'butn1' data-toggle="modal" data-target="#myModal" >ADD</button>
+                                </td>
                             </tr>
+                            
+                            
 
                     </tbody>
                     <tfoot >
@@ -168,7 +256,7 @@
                         <label class="text-dark text-right" >Total : </label>
                         <!--<input type="text" class="txt " id ='total' name = 'total' readonly>
                         <label class="txt" id ='total' name = 'total' ></label>-->
-                        <input type="number" class="txt " id = 'total' name="total" readonly>
+                        <input type="number" class="txt " id = 'total' name="total" readonly style="width: 185px;">
                     </td>
                     </tfoot>
                 </table>
@@ -182,22 +270,121 @@
               
 
             </form>
+            
         </div>
+       
+        <!-- modal -->
+        <div id="myModal" class="modal fade" >
+            <div class="modal-dialog">
+        
+            <div class="modal-content" style="background-color: rgb(7, 62, 94);">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <label>Bill-wise Details for : </label>
+                <label id ='modalacc'></label><br>
+                <label>Upto : </label>
+                <label id = 'modal_amount'></label>
+              </div>
+              <div class="modal-body">
+                <table>
+                <tr style="border: none;;" >
+                             
+                    <td colspan="6" style="border: none;" >
+
+                            <label> Type of Ref : </label>
+                    </td>
+                    <td colspan="6" class="text-right mt-0 justify-content:end;" style="border: none; ">
+                       
+                        <label> On Account</label>
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                             
+                    <td colspan="6" style="border: none;" class="mt-0">
+                        <label> Amount  &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            
+                    </td>
+                    <td colspan="6" class="text-right mt-0" style="border: none; ">
+                        <input type ='text' style="width: 100px;" readonly></label>
+                        
+                    </td>
+                </tr>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn butn btn-default text-center p-2" data-dismiss="modal" 
+                style="width: 50px; height: 35px;" onclick="showTransaction();">SAVE</button>
+              </div>
+            </div>
+        
+          </div>
+        </div> 
+       <!--modal end -->
+
+       <!--popup form -->
+       <div class="form-popup popup1" id="trs_type" style="background-color: #213b52" >
+        <form action="" class="form-container1">
+            <h6 style="background-color:rgb(17, 169, 240) ;color:white text">Transaction Types</h6>
+            <button type="button" class="btn cancel close" onclick="closeForm()">X</button>
+            <hr>
+            <div>
+                <table>
+                    <tr>
+
+                        {% for tr in transactions %}
+                        <option class="btns_prnt" onclick="setvalue(' {{tr.transcation_type}}')">&nbsp;&nbsp;{{ tr.transcation_type }}</option>
+                        {% endfor %}
+                        <input type="hidden" id = "type" readonly>
+                    </tr>
+                </table>
+            </div>
+        </form> 
+       </div> 
+       <!--end of popup form-->
+       
+
     </div>
 </div>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 
     
 <script>
+
+function closeForm() {
+    document.getElementById("trs_type").style.display = "none";
+}
+function showTransaction(){
+    document.getElementById('trs_type').style.display= "block";
+}
+function setvalue(type1){
+    document.getElementById('type').value= type1;
+
+
+    document.getElementById("trs_type").style.display = "none";
+
+    tr_type = document.getElementById('type').value
+    console.log(tr_type);
+
+    if(tr_type === "Cheque"){
+        window.location.href = "{% url 'cheque_transaction' %}"
+    }
+}
+
+
+function closeForm1() {
+    document.getElementById("cheque_type").style.display = "none";
+    document.getElementById("efund_type").style.display = "none";
+    document.getElementById("others_type").style.display = "none";
+}
+
+
 
 /*-----------------------set current balance-----------*/
 
@@ -256,7 +443,7 @@ function changeCurbalance(){
     
     
 }
-/*-----------------------set current balance-----------*/
+/*----------------------end of set current balance-----------*/
 
 
 /*----------------- create new row----&---change current balance while entering amount------*/
@@ -311,12 +498,20 @@ function createRow(){
 
    
     id++;
-    $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+id+'" name="acc1" class=" rows acc form-control m-2 p-0" onchange="changeCurbalance();"><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+id+'" class="p-0 mt-0 txt" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+id+'" oninput="calculateTotal();" onchange="createRow()" name = "amnt" ></td></tr>')
+    $(".part").append('<tr style="border: none;"><td colspan="12" style="border: none;" class="mt-4"><select id="payacc'+id+'" name="acc1" class=" rows acc form-control m-2 p-0" onchange="changeCurbalance();"><option id = "opt" >&nbsp;&nbsp;Select Particular </option> {% for i in ledg_all %}<option id = "opt" value="{{i.id}}">&nbsp;&nbsp;{{i.name}}</option>{% endfor %}</select> <label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+id+'" class="p-0 mt-0 txt" style="color: #000;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+id+'" oninput="calculateTotal();" onchange="createRow()" name = "amnt" > <button type="button" class="butn" id = "butn'+id+'">ADD</button></td></tr>')
 
-       
+    
 }
 
-/*----------------- create new row-------------*/
+/*---------------end of create new row-------------*/
+
+$(document).ready(function(){
+
+    $('#amnt1').change(function(){
+        $('#myModal').show()
+    });
+});
+
 
 /*--------- Total----------*/
 
@@ -335,10 +530,11 @@ function calculateTotal() {
   $('#total').val(sum);
 }
 
+/*----------------modal--------------*/
+
+
+
 </script>
 
 {% endblock %}
 
-
-
-/*________________________________remove 2 html pages for ajax----------------------

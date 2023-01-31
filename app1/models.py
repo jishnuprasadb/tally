@@ -1718,4 +1718,7 @@ class receipt_voucher(models.Model):
     amount = models.IntegerField(null= True)
     narration = models.CharField(max_length=255,null=True)
 
+
+class transcation(models.Model):
+    transcation_type = models.CharField(max_length=255,null=True,blank=True)
         

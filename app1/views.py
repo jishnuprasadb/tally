@@ -11521,6 +11521,7 @@ def payment_vouchers(request):
 
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
+        trns = transcation.objects.all()
      
         v  = payment_voucher.objects.values('pid').last()
         
@@ -11534,6 +11535,7 @@ def payment_vouchers(request):
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
                     'v' : counter,
+                    'transactions' : trns,
                 }
         return render(request,'payment_voucher.html',context)
 
@@ -11764,6 +11766,13 @@ def receipt_pcur_balance_change(request):
     print(val)
     print(ledger)
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
+
+def cheque_transaction(request):
+    return render(request,'cheque_transaction.html')
+def efund_transaction(request):
+    return render(request,'efund_transaction.html')
+def others_transaction(request):
+    return render(request,'others_transaction.html')
 
 
 
