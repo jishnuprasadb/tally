@@ -787,7 +787,11 @@ urlpatterns = [
     path('pcur_balance_change' , views.pcur_balance_change,name='pcur_balance_change'),    
     path('receipt_cur_balance_change' , views.receipt_cur_balance_change,name='receipt_cur_balance_change'),       
 
-    path('receipt_pcur_balance_change' , views.receipt_pcur_balance_change,name='receipt_pcur_balance_change'),      
+    path('receipt_pcur_balance_change' , views.receipt_pcur_balance_change,name='receipt_pcur_balance_change'), 
+
+    path('cheque_transaction' , views.cheque_transaction, name='cheque_transaction'), 
+    path('efund_transaction' , views.efund_transaction, name='efund_transaction'), 
+    path('others_transaction' , views.others_transaction, name='others_transaction'),      
 
  
      ]
