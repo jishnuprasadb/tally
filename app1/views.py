@@ -11521,7 +11521,7 @@ def payment_vouchers(request):
 
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
-        trns = transcation.objects.all()
+        #trns = transcation.objects.all()
      
         v  = payment_voucher.objects.values('pid').last()
         
@@ -11535,7 +11535,7 @@ def payment_vouchers(request):
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
                     'v' : counter,
-                    'transactions' : trns,
+                    #'transactions' : trns,
                 }
         return render(request,'payment_voucher.html',context)
 
