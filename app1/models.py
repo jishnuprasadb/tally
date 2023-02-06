@@ -361,6 +361,7 @@ class bank_name(models.Model):
     company=models.ForeignKey(Companies,on_delete=models.CASCADE,blank=True,null=True)
 
 class ledger_chequebook(models.Model):
+    ledger_name = models.CharField(max_length=255,null=True)
     from_number = models.IntegerField()
     to_number = models.IntegerField()
     no_of_cheques = models.IntegerField()
@@ -1719,6 +1720,13 @@ class receipt_voucher(models.Model):
     narration = models.CharField(max_length=255,null=True)
 
 
-class transcation(models.Model):
+class bank_transcations(models.Model):
+    bank_account = models.CharField(max_length=255,null=True,blank=True)
     transcation_type = models.CharField(max_length=255,null=True,blank=True)
+    instno = models.IntegerField(null=True,blank=True)
+    instdate = models.DateField(null= True,blank=True)
+    amount = models.IntegerField(null=True,blank=True)
+    acnum = models.CharField(max_length=255,null=True,blank=True)
+    ifscode = models.CharField(max_length=255,null=True,blank=True)
+    bank_name = models.CharField(max_length=255,null=True,blank=True)
         

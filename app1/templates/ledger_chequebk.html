@@ -29,7 +29,7 @@
             {% csrf_token %}
             <div class="p-3">
                 <h6 class="text-light p-2 m-0 text-center">Cheque Range For
-                    <center><input type="text" class="form-control inp text-center" id="ledgernm"></center>
+                    <center><input type="text" class="form-control inp text-center" id="ledgernm" name = "ledgernm"></center>
                 </h6>
                 
                 <div class="table-responsive-sm" style="background-color:rgba(0,0,0,.4);">
@@ -65,7 +65,6 @@
 
     <script>
         document.getElementById("ledgernm").value = localStorage.getItem("status");
-
         function f(){
             var j=document.getElementById("w").value;
             var k=document.getElementById("l").value;

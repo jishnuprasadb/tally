@@ -879,6 +879,7 @@ def ledger_chequebk(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
+        
         tally = Companies.objects.filter(id=t_id)
         return render(request, 'ledger_chequebk.html',{'tally':tally})
     return redirect('/')
@@ -891,11 +892,13 @@ def create_ledger_chequebk(request):
             return redirect('/')
         tally = Companies.objects.filter(id=t_id)
         if request.method=='POST':
+            nm=request.POST['ledgernm']
             fn=request.POST['from_number']
             tn=request.POST['to_number']
             nc=request.POST['number_cheques']
             nmc=request.POST['name_chequebk']
-            lcb=ledger_chequebook(from_number=fn,
+            lcb=ledger_chequebook(ledger_name = nm,
+                                from_number=fn,
                                 to_number = tn,
                                 no_of_cheques = nc,
                                 cheque_bookname = nmc)      
@@ -11521,12 +11524,12 @@ def payment_vouchers(request):
 
         ledg_grp_all = tally_ledger.objects.all()
         ledg_grp = tally_ledger.objects.filter(Q(under = 'Bank_Accounts')|Q(under = 'Cash_in_Hand'))
-        #trns = transcation.objects.all()
      
         v  = payment_voucher.objects.values('pid').last()
         
         counter = 1 if v is None else int(v['pid']) + 1
 
+        
         context = {
                     'company' : comp ,
                     'vouch' : vouch,
@@ -11535,7 +11538,6 @@ def payment_vouchers(request):
                     'ledg' : ledg_grp,
                     'ledg_all' : ledg_grp_all,
                     'v' : counter,
-                    #'transactions' : trns,
                 }
         return render(request,'payment_voucher.html',context)
 
@@ -11564,7 +11566,7 @@ def create_payment_voucher(request):
 
             account = tally_ledger.objects.values('name').get(id = accnt)
             
-            print(amount)
+            #print(amount)
             payment_voucher(pid = pid,account = account['name'],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
         return render(request,'/payment_vouchers')
@@ -11684,7 +11686,7 @@ def cur_balance_change(request):
     else:
         val = int(i) + int(j)
         open_type = 'Cr'
-    print(ac)
+    #print(ac)
 
     ledger = tally_ledger.objects.get(id = ac)
     
@@ -11763,16 +11765,40 @@ def receipt_pcur_balance_change(request):
 
     ledger = tally_ledger.objects.get(id = ac)
 
-    print(val)
-    print(ledger)
+    #print(val)
+    #print(ledger)
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
-def cheque_transaction(request):
-    return render(request,'cheque_transaction.html')
-def efund_transaction(request):
-    return render(request,'efund_transaction.html')
-def others_transaction(request):
-    return render(request,'others_transaction.html')
+def cheque_range(request):
+
+    acname = request.GET.get('account_name')
+
+    cqrange = ledger_chequebook.objects.values().filter(ledger_name = acname)
+    #print(cqrange)
+
+    
+    data = list(cqrange)
+    return JsonResponse(data,safe=False)
+
+def others_transcation(request):
+
+    if request.method == 'POST':
+        bacc = request.POST.get('bacc')
+        t_type = request.POST.get('t_type')
+        instno = request.POST.get('instnum')
+        instdate = request.POST.get('instdate')
+        acnum = request.POST.get('efaccnum')
+        ifsc = request.POST.get('efifs')
+        bname = request.POST.get('efbank')
+        amount = request.POST.get('amount')
+        print(instno)
+
+        bank_transcations(bank_account = bacc ,transcation_type = t_type,instno = instno,instdate = instdate,
+                            amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname)
+
+        return HttpResponse({'status': 'success'})
+
+
 
 
 

@@ -789,9 +789,8 @@ urlpatterns = [
 
     path('receipt_pcur_balance_change' , views.receipt_pcur_balance_change,name='receipt_pcur_balance_change'), 
 
-    path('cheque_transaction' , views.cheque_transaction, name='cheque_transaction'), 
-    path('efund_transaction' , views.efund_transaction, name='efund_transaction'), 
-    path('others_transaction' , views.others_transaction, name='others_transaction'),      
+    path('cheque_range' , views.cheque_range, name='cheque_range'), 
+    path('others_transcation' , views.others_transcation, name='others_transcation'), 
 
  
      ]
