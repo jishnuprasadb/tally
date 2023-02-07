@@ -790,7 +790,7 @@ urlpatterns = [
     path('receipt_pcur_balance_change' , views.receipt_pcur_balance_change,name='receipt_pcur_balance_change'), 
 
     path('cheque_range' , views.cheque_range, name='cheque_range'), 
-    path('others_transcation' , views.others_transcation, name='others_transcation'), 
+    path('bank_transcation' , views.bank_transcation, name='bank_transcation'), 
 
  
      ]

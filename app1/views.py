@@ -11665,8 +11665,6 @@ def cur_balance(request):
     data = list(ledger)
     return JsonResponse(data, safe = False)
 
-    #return render(request,'payment_voucher.html',{'ledger' : ledger})
-
 
 def cur_balance_change(request):
     
@@ -11686,7 +11684,9 @@ def cur_balance_change(request):
     else:
         val = int(i) + int(j)
         open_type = 'Cr'
-    #print(ac)
+
+    #print(val) 
+    #print(open_type)
 
     ledger = tally_ledger.objects.get(id = ac)
     
@@ -11773,14 +11773,15 @@ def cheque_range(request):
 
     acname = request.GET.get('account_name')
 
-    cqrange = ledger_chequebook.objects.values().filter(ledger_name = acname)
-    #print(cqrange)
+    cqrange = 0 if ledger_chequebook.objects.values().filter(ledger_name = acname) is None else ledger_chequebook.objects.values().filter(ledger_name = acname)
 
-    
+    c = cqrange[2]
+    print(c)
+
     data = list(cqrange)
     return JsonResponse(data,safe=False)
 
-def others_transcation(request):
+def bank_transcation(request):
 
     if request.method == 'POST':
         bacc = request.POST.get('bacc')
@@ -11791,12 +11792,14 @@ def others_transcation(request):
         ifsc = request.POST.get('efifs')
         bname = request.POST.get('efbank')
         amount = request.POST.get('amount')
-        print(instno)
+        # print(ifsc)
+        # print(bname)
+        # print(acnum)
 
         bank_transcations(bank_account = bacc ,transcation_type = t_type,instno = instno,instdate = instdate,
-                            amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname)
+                          amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
 
-        return HttpResponse({'status': 'success'})
+        return HttpResponse({"message": "success"})
 
 
 
