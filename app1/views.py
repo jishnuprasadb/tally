@@ -11559,17 +11559,15 @@ def create_payment_voucher(request):
         if request.method=='POST':
 
             pid = request.POST['idlbl']
-            accnt = request.POST['acc']
+            acc = request.POST['acc']
+            accnt = acc.split()
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
             nrt = request.POST.get('narrate')
-
-            account = tally_ledger.objects.values('name').get(id = accnt)
             
-            #print(amount)
-            payment_voucher(pid = pid,account = account['name'],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            payment_voucher(pid = pid,account = accnt[1],date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return render(request,'/payment_vouchers')
+        return redirect('/list_payment_voucher')
         
 
 def list_receipt_voucher(request):
@@ -11610,8 +11608,6 @@ def receipt_vouchers(request):
         
         counter = 1 if v is None else int(v['rid']) + 1
 
-        #receipt_voucher(pid = counter, voucher = vouch).save()
-             
      
         context = {
                     'company' : comp ,
@@ -11647,16 +11643,17 @@ def create_receipt_voucher(request):
         if request.method=='POST':
 
             rid = request.POST['idlbl']
-            accnt = request.POST['acc']
+            acc = request.POST['acc']
+            accnt = acc.split()
             date1 = request.POST.get('date1')
             amount=request.POST.get('total')
             nrt = request.POST['narrate']
 
-            account = tally_ledger.objects.values('name').get(id = accnt)
+            #account = tally_ledger.objects.values('name').get(id = accnt)
             
-            receipt_voucher(rid = rid,account = account['name'], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+            receipt_voucher(rid = rid,account = accnt[1], date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
 
-        return redirect('/receipt_vouchers')
+        return redirect('/list_receipt_voucher')
 
 
 def cur_balance(request):
@@ -11692,7 +11689,6 @@ def cur_balance_change(request):
     
     context = {'val' : val,'open_type': open_type, 'ledger' : ledger }
     
-    #return JsonResponse(context,safe=False)
     return render(request,'curbalance_change.html', context)
 
 def pcur_balance_change(request):
@@ -11741,7 +11737,6 @@ def receipt_cur_balance_change(request):
 
     ledger = tally_ledger.objects.get(id = ac)
     
-    #return HttpResponse({'val' : val, 'ledger' : ledger })
     return render(request,'curbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
 def receipt_pcur_balance_change(request):
@@ -11770,15 +11765,28 @@ def receipt_pcur_balance_change(request):
     return render(request,'pcurbalance_change.html', {'val' : val,'open_type': open_type, 'ledger' : ledger })
 
 def cheque_range(request):
-
+    
     acname = request.GET.get('account_name')
 
-    cqrange = 0 if ledger_chequebook.objects.values().filter(ledger_name = acname) is None else ledger_chequebook.objects.values().filter(ledger_name = acname)
+    data = []
 
-    c = cqrange[2]
-    print(c)
-
-    data = list(cqrange)
+    cqrange = ledger_chequebook.objects.filter(ledger_name = acname).values() if ledger_chequebook.objects.filter(ledger_name = acname).exists() else None
+    start = 0 if cqrange is None else cqrange[0]['from_number']  
+    end = 0 if cqrange is None else cqrange[0]['to_number'] 
+    q = bank_transcations.objects.filter(bank_account = acname,  transcation_type = 'Cheque').values('instno').last()
+    chqnum = q['instno']
+    print(chqnum)
+    if chqnum < end:
+        chqnum = start if q is None else (int(q['instno']) + 1)
+    else:
+        chqnum = 0
+    
+    
+    data.append(start)
+    data.append(end)
+    data.append(chqnum)  
+    #print(end)
+        
     return JsonResponse(data,safe=False)
 
 def bank_transcation(request):
@@ -11792,15 +11800,12 @@ def bank_transcation(request):
         ifsc = request.POST.get('efifs')
         bname = request.POST.get('efbank')
         amount = request.POST.get('amount')
-        # print(ifsc)
-        # print(bname)
-        # print(acnum)
+
 
         bank_transcations(bank_account = bacc ,transcation_type = t_type,instno = instno,instdate = instdate,
                           amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
 
         return HttpResponse({"message": "success"})
-
 
 
 

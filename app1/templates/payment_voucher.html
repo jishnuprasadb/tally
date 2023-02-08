@@ -249,7 +249,7 @@
                       <td colspan="18" style="border: none; ">
                        
                         <label class="text-dark">Narration : </label>
-                            <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183)"></textarea></td>
+                            <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183); color: #000;"></textarea></td>
                         {% else %}
                         <td colspan="18" style="border: none;" name  = 'narrate'></td> 
                         {% endif %}    
@@ -429,10 +429,10 @@
                                 
                             </div>
                             <div class="row container m-0 p-0">
-                                <div class="col-5 form-group">
-                                    <label>Inst No.</label>
-                                    <input type="text" id = 'chnum' class="form-control" name = 'instnum' style="width: 250px;height: 25px;">
-                                    
+                                <div class="col-5">
+                                    <label>Inst No.</label><br>
+                                    <label id = 'chnum' ></label>
+
                                 </div>
                         
                                 <div class="col-5 form-group" >
@@ -626,7 +626,7 @@ function createRow(){
     const curblnc = $('#led').val();
     const curblnct = $('#ledt').val();
     var amount1= $('#amnt'+id).val();
-    console.log(ac)
+    //console.log(ac)
     $.ajax({
             url: '{% url "cur_balance_change" %}',
             data: {
@@ -637,7 +637,7 @@ function createRow(){
             },
             
             success: function (data) {
-                console.log(data)
+                //console.log(data)
                 
                 $("#curbalance").html(data);
                 //console.log(cur_change);
@@ -687,7 +687,7 @@ function calculateTotal() {
     if(isNaN(value1.value) == false){
         sum += parseInt(value1.value) ;
     }
-    console.log(value1);
+    //console.log(value1);
   }
   $('#total').val(sum);
   
@@ -747,32 +747,37 @@ function showTransaction(){
         $("#t_type").html(trvalue);
         //console.log(trvalue);
     });
-
- 
-
-}
-/*---------------------cheque range display---------------------------*/
-$('#payacc').change(function(){
-
-        accname = $('#payacc').val(). split(" ")[1];
-        $.ajax({
+   
+    
+    /*---------------------cheque range display--&---show cheque number automatically-------------------------*/
+    $.ajax({
+        
         url: '{% url "cheque_range" %}',
         data: {
-                'account_name' : accname,
+                'account_name' : $("#chacc").text(),
+                //csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function (data) {
-            if(data != 0){
-                chrange = '<label>&nbsp;&nbsp;&nbsp;&nbsp;'+data[0].from_number+'</label><label>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</label><label>'+ data[0].to_number+'</label>'
+            console.log(data)
+            if(data[0] != 0){
+                chrange = '<label>&nbsp;&nbsp;&nbsp;&nbsp;'+data[0]+'</label><label>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</label><label>'+ data[1]+'</label>'
             }
             else{
                 chrange = '&nbsp;&nbsp;&nbsp;&nbsp; Not Applicable'
             }
             $('#chrange').html(chrange);
-            //console.log();
+            if(data[2] != 0){
+            cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "' + data[2]+'" style="width: 250px;height: 25px;">'
+            }
+            else{
+                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "Cheque Range Exceeded" style="width: 250px;height: 25px;">'
+
+            }
+            $('#chnum').html(cqnumber);
         }
     });
-});
 
+}
 
 /*----------------------save modal data to the table--------*/
  /*----others transactions type ----*/
@@ -784,6 +789,8 @@ $('#payacc').change(function(){
 
     //console.log($('#t_type').text());
 
+    
+
     if ($("#t_type").text() === 'Cheque'){
 
         $.ajax({
@@ -793,7 +800,7 @@ $('#payacc').change(function(){
                     data:{
                         bacc : $("#chacc").text(),
                         t_type : $("#t_type").text(),
-                        instnum:$("#chnum").val(),
+                        instnum:$("#chnumber").val(),
                         instdate :$("#chdate").val(),
                         efaccnum :$("#efaccnum").val(),
                         efifs :$("#efifs").val(),
@@ -871,7 +878,6 @@ $('#payacc').change(function(){
                 });
         }
   });
-
 
 
 </script>
