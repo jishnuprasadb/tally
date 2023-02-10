@@ -766,13 +766,19 @@ function showTransaction(){
                 chrange = '&nbsp;&nbsp;&nbsp;&nbsp; Not Applicable'
             }
             $('#chrange').html(chrange);
-            if(data[2] != 0){
-            cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "' + data[2]+'" style="width: 250px;height: 25px;">'
+            if(data[0] != 0){
+                if(data[2] != 0){
+                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "' + data[2]+'" style="width: 250px;height: 25px;">'
+                }
+                else{
+                    cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "Cheque Range Exceeded" style="width: 250px;height: 25px;">'
+
+                }
             }
             else{
-                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum" value = "Cheque Range Exceeded" style="width: 250px;height: 25px;">'
-
+                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum"  style="width: 250px;height: 25px;">'
             }
+
             $('#chnum').html(cqnumber);
         }
     });

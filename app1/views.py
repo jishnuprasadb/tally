@@ -11774,8 +11774,8 @@ def cheque_range(request):
     start = 0 if cqrange is None else cqrange[0]['from_number']  
     end = 0 if cqrange is None else cqrange[0]['to_number'] 
     q = bank_transcations.objects.filter(bank_account = acname,  transcation_type = 'Cheque').values('instno').last()
-    chqnum = q['instno']
-    print(chqnum)
+    chqnum = 0 if q is None else q['instno']
+    #print(chqnum)
     if chqnum < end:
         chqnum = start if q is None else (int(q['instno']) + 1)
     else:
@@ -11785,7 +11785,7 @@ def cheque_range(request):
     data.append(start)
     data.append(end)
     data.append(chqnum)  
-    #print(end)
+    #print(chqnum)
         
     return JsonResponse(data,safe=False)
 

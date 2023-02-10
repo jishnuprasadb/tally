@@ -1729,4 +1729,14 @@ class bank_transcations(models.Model):
     acnum = models.CharField(max_length=255,null=True,blank=True)
     ifscode = models.CharField(max_length=255,null=True,blank=True)
     bank_name = models.CharField(max_length=255,null=True,blank=True)
+
+class ledgeraccounts(models.Model):
+
+    ledg_acc = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+    type_of_vouch = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+    ledg_name = models.CharField(max_length=255,null=True,blank=True)
+    vouchtype_name = models.CharField(max_length=255,null=True,blank=True)
+    current_balance = models.IntegerField(null=True,blank=True)
+    current_balance_type = models.CharField(max_length=50,null=True,blank=True)
+
         
