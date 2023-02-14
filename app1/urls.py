@@ -793,4 +793,4 @@ urlpatterns = [
     path('bank_transcation' , views.bank_transcation, name='bank_transcation'), 
 
  
-     ]
+]

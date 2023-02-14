@@ -575,10 +575,10 @@
         },
         
         success: function (data) {
-            if(data[0].opening_blnc_type == 'Dr'){       
-            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].opening_blnc +'> <input id ="ledt" class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
+            if(data[0].current_blnc_type == 'Dr'){       
+            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].current_blnc +'> <input id ="ledt" class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
             else{
-            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].opening_blnc +' style="color: red;"> <input id ="ledt" style="color: red;"  class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
+            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].current_blnc +' style="color: red;"> <input id ="ledt" style="color: red;"  class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
 
             $("#curbalance").html(curData);
             //console.log(data);
@@ -603,10 +603,10 @@ function changeCurbalance(){
         
         success: function (data) {
             
-            if(data[0].opening_blnc_type == 'Dr'){       
-            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].opening_blnc +'> <input id ="pledt" class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
+            if(data[0].current_blnc_type == 'Dr'){       
+            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].current_blnc +'> <input id ="pledt" class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
             else{
-            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].opening_blnc +' style="color: red;"> <input id ="pledt" style="color: red;"  class= "txt" readonly value = '+data[0].opening_blnc_type+'>';}
+            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].current_blnc +' style="color: red;"> <input id ="pledt" style="color: red;"  class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
             //console.log(curData);
             $("#blnc"+id1).html(curData1);
         }
@@ -661,6 +661,7 @@ function createRow(){
         },
         
         success: function (data) {
+            
             $("#blnc"+(id-1)).html(data);
             //console.log('#blnc'+id);
         }

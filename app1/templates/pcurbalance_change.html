@@ -11,12 +11,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
     
-    {% if open_type == 'Cr'%}
-    <input type="text" id = 'led' value="{{val}}" readonly class="balance" style="color: red;">
-    <input type="text" id = 'ledt' value="{{open_type}}" readonly class="balance" style="width: 30px; color: red;">
+    {% if cur_type == 'Cr'%}
+    <input type="text" id = 'pled' value="{{val}}" readonly class="balance" style="color: red;">
+    <input type="text" id = 'pledt' value="{{cur_type}}" readonly class="balance" style="width: 30px; color: red;">
     {% else  %}
-    <input type="text" id = 'led' value="{{val}}" readonly class="balance">
-    <input type="text" id = 'ledt' value="{{open_type}}" readonly class="balance" style="width: 30px;">
+    <input type="text" id = 'pled' value="{{val}}" readonly class="balance">
+    <input type="text" id = 'pledt' value="{{cur_type}}" readonly class="balance" style="width: 30px;">
     
     {% endif%}
     
