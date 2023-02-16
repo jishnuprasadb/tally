@@ -1,4 +1,4 @@
-import datetime
+import datetime,calendar
 import random
 import re
 from tally.settings import EMAIL_HOST_USER
@@ -11846,6 +11846,163 @@ def bank_transcation(request):
                           amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
 
         return HttpResponse({"message": "success"})
+    
+
+    #------stock summary---------------
+
+def stock_summary(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+        if fmonths.objects.values().exists() is False:
+            m = list(calendar.month_name)
+            for i in range(1,len(m)):
+                f = fmonths()
+                f.month_name = m[i]
+                f.save()
+
+        comp = Companies.objects.get(id=t_id)
+        group = CreateStockGrp.objects.all().values()
+
+        sum = 0
+        for g in group:
+            value1 = 0
+            item = stock_itemcreation.objects.filter(under_id = g['id']).values('value')
+            for i in item:
+                value1 += int(i['value'])
+            g['total'] = value1
+            sum += value1
+            
+        startdate = comp.fin_begin
+        context = {
+                    'company' : comp,
+                    'group' : group,
+                    'item' : item,
+                    'value' : sum,
+                    'startdate' : startdate,
+                }
+        
+    return render(request, 'stock_summary.html', context)
+
+
+def stock_group_summary(request,pk):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id=t_id)
+        group = CreateStockGrp.objects.get(id = pk)
+        item = stock_itemcreation.objects.filter(under_id = group.id)
+        value = 0
+        for i in item:
+            value += int(i.value)
+
+        startdate = comp.fin_begin
+
+    context = {
+            'company' : comp,
+            'group' : group,
+            'item' : item,
+            'value' : value,
+            'startdate' : startdate,
+        }
+
+    return render(request, 'stock_group_summary.html',context)
+
+def stock_item_monthly_summary(request,pk):
+        
+        if 't_id' in request.session:
+            if request.session.has_key('t_id'):
+                t_id = request.session['t_id']
+            else:
+                return redirect('/')
+
+        comp = Companies.objects.get(id=t_id)
+        
+
+        months = fmonths.objects.values()
+        item = stock_itemcreation.objects.get(id=pk)
+        vouch = stock_item_voucher.objects.filter(item_id = item.id)
+
+        beg_date = comp.fin_begin
+        if vouch.exists():
+            v = vouch.latest('date')
+            new_date = (v.date)
+        else:
+            new_date = comp.fin_begin
+
+        total_inqty = total_inval = total_outqty = total_outval = 0
+        sum_in_qty = sum_in_val = sum_out_qty = sum_out_val = 0
+        in_qty = in_val = out_qty = out_val =0
+        total_qty = int(item.quantity)
+        total_val = int(item.value)
+
+        for mnth in months:
+
+            if vouch.exists():
+
+                for v in vouch:
+
+                    if v.month_id == mnth['id']:
+
+                        in_qty = 0 if v.inwards_qty is None else v.inwards_qty
+                        in_val = 0 if v.inwards_val is None else v.inwards_val
+                        out_qty = 0 if v.outwards_qty is None else v.outwards_qty
+                        out_val = 0 if v.outwards_val is None else v.outwards_val
+
+                        total_inqty += in_qty
+                        total_inval += in_val
+                        total_outqty += out_qty
+                        total_outval += out_val
+
+                        if v.Voucher_type == 'Purchase':
+                            mnth['total_inqty'] = total_inqty
+                            mnth['total_inval'] = total_inval
+                        else:
+                            mnth['total_outqty'] = total_outqty
+                            mnth['total_outval'] = total_outval
+                        
+                        total_qty += in_qty - out_qty
+                        total_val += in_val - out_val
+
+                        mnth['total_qty'] = total_qty
+                        mnth['total_val'] = total_val
+
+                        sum_in_qty += in_qty
+                        sum_in_val += in_val
+                        sum_out_qty += out_qty
+                        sum_out_val += out_val  
+
+                total_inqty = total_inval = total_outqty = total_outval = 0
+            
+        last_qty = total_qty
+        last_val = total_val
+
+        
+        context = {
+                    'company' : comp,
+                    'months' : months,
+                    'item' : item,
+                    'voucher' : vouch,
+                    'tot_qty' :last_qty,
+                    'tot_val' : last_val,
+                    'sum_in_qty' : sum_in_qty,
+                    'sum_in_val' : sum_in_val,
+                    'sum_out_qty' : sum_out_qty,
+                    'sum_out_val' : sum_out_val,
+                    'beg_date' : beg_date,
+                    'new_date' : new_date,
+                    
+                }
+
+        return render(request,'stock_item_monthly_summary.html',context)
 
 
 

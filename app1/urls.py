@@ -792,5 +792,11 @@ urlpatterns = [
     path('cheque_range' , views.cheque_range, name='cheque_range'), 
     path('bank_transcation' , views.bank_transcation, name='bank_transcation'), 
 
+    #-----------stock summary-----------------
+
+    path('stock_summary',views.stock_summary,name = 'stock_summary'),
+    path('stock_group_summary/<pk>',views.stock_group_summary,name = 'stock_group_summary'),
+    path('stock_item_monthly_summary/<pk>',views.stock_item_monthly_summary,name='stock_item_monthly_summary'),
+
  
 ]
