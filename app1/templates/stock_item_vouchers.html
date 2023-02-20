@@ -51,12 +51,13 @@
                     </tr>
 
                     {% for v in voucher %}
+                    
                     <tr class="">
-                    <td class="text-left">{{beg_date}}</td>
+                    <td class="text-left">{{beg_date}}{{v.Particulars}}{{v.outwards_qty}}</td>
                     <td colspan="3" class=" text-left ">{{v.Particulars}}</td>
                     <td colspan="3" class="text-right">{{v.Voucher_type}}</td>
                     <td colspan="2" class="text-right">{{v.Voucher_no}}</td>
-
+                        
                     {% if v.inwards_qty is not None %}
                     <th class="border-left text-center">{{v.inwards_qty}} {{item.units}}</th>
                     <th class="text-center">{{v.inwards_val}}</th>
@@ -64,7 +65,7 @@
                     <th class="border-left"></th>
                     <th></th>
                     {% endif %}
-
+                        
                     {% if v.outwards_qty is not None %}
                     <th class="border-left text-center">{{v.outwards_qty}} {{item.units}}</th>
                     <th class="text-center">{{v.outwards_val}}</th>

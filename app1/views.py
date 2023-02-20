@@ -11946,18 +11946,19 @@ def stock_item_monthly_summary(request,pk):
         total_val = int(item.value)
 
         for mnth in months:
-
+            
             if vouch.exists():
 
                 for v in vouch:
-                    
+                    print(v.month_id)
                     if v.month_id == mnth['id']:
-
+                        
                         in_qty = 0 if v.inwards_qty is None else v.inwards_qty
                         in_val = 0 if v.inwards_val is None else v.inwards_val
                         out_qty = 0 if v.outwards_qty is None else v.outwards_qty
                         out_val = 0 if v.outwards_val is None else v.outwards_val
-                        
+                        print(in_val)
+                        print(out_qty)
 
                         total_inqty += in_qty
                         total_inval += in_val
@@ -11984,8 +11985,8 @@ def stock_item_monthly_summary(request,pk):
 
                 total_inqty = total_inval = total_outqty = total_outval = 0
             
-            last_qty = total_qty
-            last_val = total_val
+        last_qty = total_qty
+        last_val = total_val
 
         
         context = {
@@ -11999,8 +12000,8 @@ def stock_item_monthly_summary(request,pk):
                     'sum_in_val' : sum_in_val,
                     'sum_out_qty' : sum_out_qty,
                     'sum_out_val' : sum_out_val,
-                    'beg_date' : beg_date,
-                    'new_date' : new_date,
+                     'beg_date' : beg_date,
+                     'new_date' : new_date,
                     
                 }
 
@@ -12020,19 +12021,19 @@ def stock_item_vouchers(request,pk,id):
         mnth = fmonths.objects.get(id = id)
         voucher = stock_item_voucher.objects.filter(item_id = item.id)
 
-        # for v in voucher:
-        #     if v.Voucher_type == 'Purchase':
-        #         inwards_value = v.inwards_qty * v.rate * v.per
-        #         v.inwards_val = inwards_value 
-        #     else:
-        #         outwards_value = v.outwards_qty * v.rate * v.per
-        #         v.outwards_val = outwards_value
+        for v in voucher:
+            # if v.Voucher_type == 'Purchase':
+            #     inwards_value = v.inwards_qty * v.rate * v.per
+            #     v.inwards_val = inwards_value 
+            # else:
+            #     outwards_value = v.outwards_qty * v.rate * v.per
+            #     v.outwards_val = outwards_value
 
-        #     v_month = v.date.strftime('%B')
-        #     m_id = fmonths.objects.get(month_name = v_month)
+            v_month = v.date.strftime('%B')
+            m_id = fmonths.objects.get(month_name = v_month)
 
-        #     v.month = m_id
-        #     v.save()
+            v.month = m_id
+            v.save()
 
             
 
