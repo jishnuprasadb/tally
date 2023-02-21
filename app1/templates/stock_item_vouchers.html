@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="main-panel">
         <div class="content-wrapper">
-            <div class="row d-flex " style="background-color: rgb(103, 175, 220);color:#fff;width:100%;margin: auto;">
+            <div class="row d-flex " style=" font-weight:600 ; background-color: rgb(124, 186, 224);color: #000;width: 100%;margin: auto;">
                 <div class="col ">Stock Item Voucher</div>
                 <div class="col-4" style="font-weight:600 ;text-transform:capitalize;">{{company.name}}</div>
                 
@@ -16,7 +16,7 @@
                 <table class="table" style="background-color: rgba(33,57,77,255);color:#fff;">
                     <tr>
                     <th colspan="8" >Stock Item : {{item.name }}</th>
-                    <th colspan="8" class="text-right">{{beg_date |date:'d-M-Y'}} to {{end_date|date:'d-M-Y'}}</th>
+                    <th colspan="8" class="text-right">{{beg_date}} to {{end_date}}</th>
                     </tr>
                     <tr>
                     <th rowspan="2" class="text-left"> Date</th>
@@ -52,8 +52,8 @@
 
                     {% for v in voucher %}
                     
-                    <tr class="">
-                    <td class="text-left">{{beg_date}}{{v.Particulars}}{{v.outwards_qty}}</td>
+                    <tr>
+                    <td class="text-left">{{beg_date}}</td>
                     <td colspan="3" class=" text-left ">{{v.Particulars}}</td>
                     <td colspan="3" class="text-right">{{v.Voucher_type}}</td>
                     <td colspan="2" class="text-right">{{v.Voucher_no}}</td>
@@ -81,12 +81,30 @@
 
                     <tr>
                     <td colspan="9" class="text-center">Totals as per 'Default' Valuation :</td>
+                    {% if sum_in_val != 0 %}
                     <td class="border-left text-center">{{sum_in_qty}} {{item.units}}</td>
                     <td class="text-center">{{sum_in_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
+                    {% if sum_out_val != 0  %}
                     <td class="border-left text-center">{{sum_out_qty}} {{item.units}}</td>
                     <td class="text-center">{{sum_out_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
+                    {% if sum_closing_val != 0 %}
                     <td class="border-left text-center">{{sum_closing_qty}} {{item.units}}</td>
                     <td class="text-center"> {{sum_closing_val}}</td>
+                    {% else %}
+                    <td class="border-left text-center"></td>
+                    <td class="text-center"></td>
+                    {% endif %}
+
                     </tr>
 
                 </table>

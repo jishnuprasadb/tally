@@ -11878,14 +11878,14 @@ def stock_summary(request):
             sum += value1
             
         startdate = comp.fin_begin
-        context = {
-                    'company' : comp,
-                    'group' : group,
-                    'item' : item,
-                    'value' : sum,
-                    'startdate' : startdate,
-                }
-        
+    context = {
+                'company' : comp,
+                'group' : group,
+                'item' : item,
+                'value' : sum,
+                'startdate' : startdate,
+            }
+    
     return render(request, 'stock_summary.html', context)
 
 
@@ -12062,16 +12062,17 @@ def stock_item_vouchers(request,pk,id):
             sum_out_qty += out_qty
             sum_out_val += out_val
             
-            m =  int(datetime.strptime(mnth.month_name, '%B').month)
-            y = int(v.date.strftime('%Y'))
-            beg_date = datetime(y,m,1).date()
+        m =  int(datetime.strptime(mnth.month_name, '%B').month)
+        y = int(v.date.strftime('%Y'))
+        beg_date = datetime(y,m,1).date().strftime('1-%b-%y')
 
-            if mnth.month_name != 'December':
-                m2 =  int(datetime.strptime(mnth.month_name, '%B').month)+1
-            else:
-                m2 = 10
+        if mnth.month_name != 'December':
+            m2 =  int(datetime.strptime(mnth.month_name, '%B').month)+1
+        else:
+            m2 = 10
             y = int(v.date.strftime('%Y'))
-            end_date = (datetime(y,m2,1) - timedelta(days=1)).date()
+        end_date = (datetime(y,m2,1) - timedelta(days=1)).date().strftime('%d-%b-%y')
+
 
         context = {
                     'company' : comp,
