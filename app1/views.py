@@ -18,7 +18,7 @@ from unittest import signals
 from webbrowser import get
 from django.db.models.functions import Coalesce
 from xml.etree.ElementTree import tostring
-from django.db.models import Sum
+from django.db.models import Sum,Max
 from cgi import print_arguments
 from multiprocessing import context
 from symtable import Symbol
@@ -11665,6 +11665,7 @@ def create_receipt_voucher(request):
                        
 
         vouch = Voucher.objects.filter(voucher_type = 'Receipt').get(voucher_name = name)
+        
 
         if request.method=='POST':
 
@@ -11685,7 +11686,9 @@ def create_receipt_voucher(request):
 def cur_balance(request):
     i = request.GET.get('id')
     ledger = tally_ledger.objects.values().filter(id = i)
+   
     data = list(ledger)
+    
     return JsonResponse(data, safe = False)
 
 
@@ -11718,6 +11721,7 @@ def cur_balance_change(request):
     ledger.current_blnc = val
     ledger.current_blnc_type = cur_type
     ledger.save()
+   
    
     #print(ledger)
     
@@ -11840,7 +11844,8 @@ def bank_transcation(request):
         ifsc = request.POST.get('efifs')
         bname = request.POST.get('efbank')
         amount = request.POST.get('amount')
-
+     
+      
 
         bank_transcations(bank_account = bacc ,transcation_type = t_type,instno = instno,instdate = instdate,
                           amount = amount,acnum = acnum,ifscode = ifsc, bank_name = bname).save()
@@ -12092,6 +12097,173 @@ def stock_item_vouchers(request,pk,id):
         return render(request,'stock_item_vouchers.html',context)
 
 
+
+def list_contra_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        ledger = tally_ledger.objects.all()
+        for i in range(len(ledger)):
+            #print(ledger[i])
+            
+            if ledger[i].current_blnc is None:
+                ledger[i].current_blnc = ledger[i].opening_blnc
+                ledger[i].current_blnc_type = ledger[i].opening_blnc_type
+
+                ledger[i].save()
+        #print(ledger)
+
+        voucher = Voucher.objects.filter(voucher_type = 'contra')
+        context = {
+                    'voucher': voucher,
+
+                }
+        return render(request,'list_contra_type.html',context)
+
+def contra_vouchers(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        
+        name = request.POST.get('ctype')
+     
+        vouch = Voucher.objects.filter(voucher_type = 'contra').get(voucher_name = name)
+
+        cmp = Companies.objects.get(id=t_id)
+        ledg_grp = tally_ledger.objects.filter(under__in = ['Bank_Accounts','Cash_in_Hand'],company_id=cmp)
+
+        #for i in range(1,len(ledg_grp_all)):
+        v=contra_voucher.objects.aggregate(Max('cid'))
+
+        counter = 1 if v['cid__max'] is None else int(v['cid__max']) + 1
+        context = {
+                    'company' : cmp ,
+                    'vouch' : vouch,
+                    'date1' : date.today(),
+                    'name':name,
+                    'ledg' : ledg_grp,
+                    'v' : counter,
+                }
+        return render(request,'contra_voucher.html',context)
+
+def create_contra_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+        
+
+        name=request.POST.get('type')
+     
+        
+        
+                             
+        vouch = Voucher.objects.filter(voucher_type = 'contra').get(voucher_name = name)
+       
+        if request.method=='POST':
+            cid = request.POST.get('idlbl')
+            acc = request.POST.get('acc')
+            date1 = request.POST.get('date1')
+            amount=request.POST.get('total')
+            nrt = request.POST.get('narrate')
+           
+            
+           
+
+            
+        contra_voucher(cid = cid,account = acc,date = date1 , amount = amount , narration = nrt ,voucher = vouch).save()
+
+        
+        return redirect('/list_contra_voucher')
+    
+def contra_cur_balance_change(request):
+    
+    name = request.GET.get('name')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+
+    if type == 'Dr':
+        v1 = int(i)+ int(j)
+        if v1 < 0:
+            cur_type = 'Cr'
+            val = abs(v1)
+        else:
+            cur_type = 'Dr'
+            val = v1
+    else:
+        v1 = int(j) - int(1)
+        if v1 < 0:
+            cur_type = 'Cr'
+            val = abs(v1)
+        else:
+            cur_type = 'Dr'
+            val = v1
+
+    
+    ledger = tally_ledger.objects.get(name = name)
+
+
+
+    ledger.current_blnc = val
+    ledger.current_blnc_type = cur_type
+    ledger.save()
+   
+    #print(ledger)
+    
+    context = {'val' : val,'cur_type': cur_type, 'ledger' : ledger }
+    
+    return render(request,'curbalance_change.html', context)
+        
+def ccur_balance_change(request):
+    ac = request.GET.get('pac')
+    i = request.GET.get('curblnc')
+    j = request.GET.get('amount')
+    type = request.GET.get('curblnct')
+    
+
+   
+    if type == 'Cr':
+        v2 = int(i)+int(j)
+        val = v2
+        cur_type = 'Cr'
+    else:
+        v2 = int(i) - int(j)
+        if v2 < 0:
+            val = abs(v2)
+            cur_type = 'Cr'
+        else:
+            val = v2
+            cur_type = 'Dr'
+
+        
+
+    ledger = tally_ledger.objects.get(name = ac)
+    ledger.current_blnc = val
+    ledger.current_blnc_type = cur_type
+    ledger.save()
+    under=ledger.under
+  
+    return render(request,'contra_curbalance_change.html', {'val' : val,'cur_type': cur_type, 'ledger' : ledger })
+
+def under_(request):
+    i = request.GET.get('parname')
+    ledger = tally_ledger.objects.values().filter(name = i)
+    data = list(ledger)
+    return JsonResponse(data, safe = False)
+
+
+        
 
 
 

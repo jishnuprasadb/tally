@@ -1723,6 +1723,16 @@ class receipt_voucher(models.Model):
     amount = models.IntegerField(null= True)
     narration = models.CharField(max_length=255,null=True)
 
+class contra_voucher(models.Model):
+
+    voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+
+    cid = models.IntegerField(null=True)
+    account = models.CharField(max_length= 255, null=True)
+    date = models.DateField(blank = True,null= True)
+    amount = models.IntegerField(null= True)
+    narration = models.CharField(max_length=255,null=True)    
+
 
 class bank_transcations(models.Model):
     bank_account = models.CharField(max_length=255,null=True,blank=True)

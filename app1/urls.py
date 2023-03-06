@@ -800,5 +800,11 @@ urlpatterns = [
     path('stock_item_vouchers/<pk>/<id>',views.stock_item_vouchers,name='stock_item_vouchers'),
 
 
+    path('list_contra_voucher',views.list_contra_voucher,name='list_contra_voucher'),
+    path('contra_vouchers',views.contra_vouchers,name='contra_vouchers'),
+    path('create_contra_voucher' , views.create_contra_voucher,name='create_contra_voucher'), 
+    path('contra_cur_balance_change' , views.contra_cur_balance_change,name='contra_cur_balance_change'),       
+    path('ccur_balance_change' , views.ccur_balance_change,name='ccur_balance_change'),    
+    path('under_',views.under_,name="under_"),
  
 ]
